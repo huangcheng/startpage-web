@@ -95,7 +95,7 @@
     "jest-environment-jsdom": "^29.2.2",
     "lint-staged": "^13.0.3",
     "mini-css-extract-plugin": "^2.6.1",
-    "msw": "^0.47.4",
+    "msw": "^1.1.0",
     "node-notifier": "^10.0.1",
     "npm-check-updates": "^16.3.16",
     "postcss": "^8.4.18",

@@ -9,6 +9,7 @@ module.exports = {
     historyApiFallback: true,
     open: false,
     port: 8080,
+    static: ['./dist'],
   },
   devtool: 'inline-source-map',
   entry: ['react-hot-loader/patch', './src/index.tsx'],

@@ -56,16 +56,19 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: resolve(rootDir, 'public', 'index.ejs'),
+      templateParameters: {
+        favicon_uri: '/static/images/',
+      },
     }),
-    // new CopyPlugin({
-    //   patterns: [
-    //     {
-    //       context: rootDir,
-    //       from: 'public/assets/images/*',
-    //       to: 'static/images/[name][ext]',
-    //     },
-    //   ],
-    // }),
+    new CopyPlugin({
+      patterns: [
+        {
+          context: rootDir,
+          from: 'public/assets/images/*',
+          to: 'static/images/[name][ext]',
+        },
+      ],
+    }),
     new webpack.DefinePlugin({
       ENV: JSON.stringify(process.env.NODE_ENV),
       PRODUCTION: JSON.stringify(process.env.NODE_ENV === 'production'),
@@ -79,6 +82,7 @@ module.exports = {
     alias: {
       actions: resolve(srcDir, 'actions'),
       apis: resolve(srcDir, 'apis'),
+      assets: resolve(srcDir, 'assets'),
       components: resolve(srcDir, 'components'),
       configs: resolve(srcDir, 'configs'),
       constant: resolve(srcDir, 'constant'),
@@ -88,7 +92,6 @@ module.exports = {
       styles: resolve(srcDir, 'styles'),
       types: resolve(srcDir, 'types'),
       utils: resolve(srcDir, 'utils'),
-      assets: resolve(srcDir, 'assets'),
     },
     extensions: ['.ts', '.tsx', '.js', '.json'],
   },

@@ -40,6 +40,7 @@ const Container = (): ReactElement => {
       />
       <div
         css={css`
+          align-content: stretch;
           display: flex;
         `}
       >
@@ -49,8 +50,8 @@ const Container = (): ReactElement => {
         <div
           css={css`
             display: flex;
-            flex: auto;
             flex-direction: column;
+            flex: auto;
           `}
         >
           <Head style={{ borderBottom: `1px solid ${borderColor}` }} />

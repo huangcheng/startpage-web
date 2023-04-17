@@ -1,5 +1,3 @@
-import { css } from '@emotion/react';
-
 import type { ReactElement, PropsWithChildren, CSSProperties } from 'react';
 
 type SideProps = {
@@ -18,9 +16,6 @@ export default function Side({
         width,
         ...style,
       }}
-      css={css`
-        height: 100vh;
-      `}
     >
       {children}
     </aside>

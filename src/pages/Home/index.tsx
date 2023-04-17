@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { Search } from 'components';
 
 export default function Home(): JSX.Element {
   return (
@@ -9,7 +10,7 @@ export default function Home(): JSX.Element {
         align-items: center;
       `}
     >
-      <h1>Home</h1>
+      <Search />
     </div>
   );
 }

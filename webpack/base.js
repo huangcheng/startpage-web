@@ -90,6 +90,7 @@ module.exports = {
       layouts: resolve(srcDir, 'layouts'),
       reducers: resolve(srcDir, 'reducers'),
       styles: resolve(srcDir, 'styles'),
+      themes: resolve(srcDir, 'themes'),
       types: resolve(srcDir, 'types'),
       utils: resolve(srcDir, 'utils'),
     },

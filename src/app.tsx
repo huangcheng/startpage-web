@@ -10,8 +10,10 @@ import type { ReactElement } from 'react';
 
 import { MainContent, Side, Head } from 'layouts';
 
-import { useSelector, useDispatch } from 'hooks/store';
-import { setLoading } from 'reducers/global';
+import logo from 'assets/images/logo.png';
+
+import { useSelector } from 'hooks/store';
+import { Logo } from 'components';
 
 import store from './store';
 import routes from './routes';
@@ -24,15 +26,8 @@ const i18nInstance = i18next.createInstance();
 const Container = (): ReactElement => {
   const content = useRoutes(routes);
   const theme = useTheme() as Theme;
-  const loading = useSelector((state: State) => state.global.loading);
-  const dispatch = useDispatch();
 
   const { containerBackgroundColor, borderColor } = theme;
-
-  // mock loading
-  setTimeout(() => {
-    dispatch(setLoading(false));
-  }, 3000);
 
   return (
     <>
@@ -43,27 +38,25 @@ const Container = (): ReactElement => {
           }
         `}
       />
-      {loading ? (
-        'loading...'
-      ) : (
+      <div
+        css={css`
+          display: flex;
+        `}
+      >
+        <Side style={{ backgroundColor: containerBackgroundColor }}>
+          <Logo src={logo} />
+        </Side>
         <div
           css={css`
             display: flex;
+            flex: auto;
+            flex-direction: column;
           `}
         >
-          <Side style={{ backgroundColor: containerBackgroundColor }}></Side>
-          <div
-            css={css`
-              display: flex;
-              flex: auto;
-              flex-direction: column;
-            `}
-          >
-            <Head style={{ borderBottom: `1px solid ${borderColor}` }} />
-            <MainContent>{content}</MainContent>
-          </div>
+          <Head style={{ borderBottom: `1px solid ${borderColor}` }} />
+          <MainContent>{content}</MainContent>
         </div>
-      )}
+      </div>
     </>
   );
 };

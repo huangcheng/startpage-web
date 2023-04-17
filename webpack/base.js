@@ -88,6 +88,7 @@ module.exports = {
       styles: resolve(srcDir, 'styles'),
       types: resolve(srcDir, 'types'),
       utils: resolve(srcDir, 'utils'),
+      assets: resolve(srcDir, 'assets'),
     },
     extensions: ['.ts', '.tsx', '.js', '.json'],
   },

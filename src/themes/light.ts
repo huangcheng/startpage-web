@@ -6,6 +6,11 @@ const theme: Theme = {
   containerBackgroundColor: '#F7F8FA',
   logoColor: '#161A3B',
 
+  /* Nav */
+  navActiveBackgroundColor: 'rgba(240, 240, 240, 0.68);',
+  navActiveColor: '#566EF0',
+  navColor: '#161A3B',
+
   /* Search  */
   searchBackgroundColor: '#EFF2FA',
 };

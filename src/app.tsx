@@ -13,7 +13,7 @@ import { MainContent, Side, Head } from 'layouts';
 import logo from 'assets/images/logo.png';
 
 import { useSelector } from 'hooks/store';
-import { Logo } from 'components';
+import { Logo, Nav } from 'components';
 
 import store from './store';
 import routes from './routes';
@@ -44,8 +44,17 @@ const Container = (): ReactElement => {
           display: flex;
         `}
       >
-        <Side style={{ backgroundColor: containerBackgroundColor }}>
+        <Side
+          style={{
+            backgroundColor: containerBackgroundColor,
+          }}
+        >
           <Logo src={logo} />
+          <Nav
+            style={{
+              marginTop: 10,
+            }}
+          />
         </Side>
         <div
           css={css`
@@ -54,7 +63,11 @@ const Container = (): ReactElement => {
             flex: auto;
           `}
         >
-          <Head style={{ borderBottom: `1px solid ${borderColor}` }} />
+          <Head
+            style={{
+              borderBottom: `1px solid ${borderColor}`,
+            }}
+          />
           <MainContent>{content}</MainContent>
         </div>
       </div>

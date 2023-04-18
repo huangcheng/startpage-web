@@ -4,4 +4,6 @@ declare global {
   export type State = RootState;
 
   declare const ENV: string;
+
+  declare const API_URI: string;
 }

@@ -3,6 +3,7 @@ const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const CopyPlugin = require('copy-webpack-plugin');
+const dotenv = require('dotenv');
 
 const rootDir = resolve(__dirname, '..');
 const srcDir = resolve(rootDir, 'src');
@@ -10,6 +11,8 @@ const srcDir = resolve(rootDir, 'src');
 const package_ = require(resolve(rootDir, 'package.json'));
 
 const SERVICE = process.env.SERVICE || '';
+
+dotenv.config({ path: resolve(rootDir, '.env') });
 
 module.exports = {
   module: {
@@ -70,6 +73,7 @@ module.exports = {
       ],
     }),
     new webpack.DefinePlugin({
+      API_URI: JSON.stringify(process.env.API_URI),
       ENV: JSON.stringify(process.env.NODE_ENV),
       PRODUCTION: JSON.stringify(process.env.NODE_ENV === 'production'),
       PROJECT: JSON.stringify(package_.name),

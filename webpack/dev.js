@@ -1,5 +1,3 @@
-const { resolve } = require('path');
-
 module.exports = {
   cache: {
     type: 'memory',
@@ -8,7 +6,7 @@ module.exports = {
     compress: true,
     historyApiFallback: true,
     open: false,
-    port: 8080,
+    port: 8081,
     static: ['./dist'],
   },
   devtool: 'inline-source-map',

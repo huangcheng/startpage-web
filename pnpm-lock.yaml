@@ -61,7 +61,7 @@ specifiers:
   css-loader: ^6.7.3
   cypress: ^12.9.0
   cz-conventional-changelog: ^3.3.0
-  emotion-normalize: ^11.0.1
+  dotenv: ^16.0.3
   eslint: ^8.38.0
   eslint-config-prettier: ^8.8.0
   eslint-plugin-cypress: ^2.13.2
@@ -133,7 +133,6 @@ dependencies:
   '@reduxjs/toolkit': 1.9.3_k4ae6lp43ej6mezo3ztvx6pykq
   axios: 1.3.5
   core-js: 3.30.1
-  emotion-normalize: 11.0.1_3og6jmu6wvzuytygvdoxepq3x4
   i18next: 22.4.14
   lodash: 4.17.21
   react: 18.2.0
@@ -204,6 +203,7 @@ devDependencies:
   css-loader: 6.7.3_webpack@5.79.0
   cypress: 12.9.0
   cz-conventional-changelog: 3.3.0_kxhlufir6rzdckorzasy2ev6vi
+  dotenv: 16.0.3
   eslint: 8.38.0
   eslint-config-prettier: 8.8.0_eslint@8.38.0
   eslint-plugin-cypress: 2.13.2_eslint@8.38.0
@@ -5036,7 +5036,7 @@ packages:
     resolution:
       { integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ== }
     dependencies:
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.2_debug@4.3.4
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug
@@ -6992,6 +6992,12 @@ packages:
       is-obj: 2.0.0
     dev: true
 
+  /dotenv/16.0.3:
+    resolution:
+      { integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ== }
+    engines: { node: '>=12' }
+    dev: true
+
   /duplexer/0.1.2:
     resolution:
       { integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg== }
@@ -7040,17 +7046,6 @@ packages:
       { integrity: sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q== }
     engines: { node: '>= 4' }
     dev: true
-
-  /emotion-normalize/11.0.1_3og6jmu6wvzuytygvdoxepq3x4:
-    resolution:
-      { integrity: sha512-68+TdnChNbELbOVtA2oOdSc9W40KPH4dKYdXgk2KfkuGu+qK7glVVO4h5Q+hoAf2JqJfTV55wPeBMPuun+3fVA== }
-    peerDependencies:
-      '@emotion/react': ^11.0.0
-      react: '>=16.3.0'
-    dependencies:
-      '@emotion/react': 11.10.6_yuz6bkerhkjfjuf6zeb7j6ybc4
-      react: 18.2.0
-    dev: false
 
   /encodeurl/1.0.2:
     resolution:
@@ -8078,6 +8073,19 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+
+  /follow-redirects/1.15.2_debug@4.3.4:
+    resolution:
+      { integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA== }
+    engines: { node: '>=4.0' }
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4
+    dev: true
 
   /for-each/0.3.3:
     resolution:

@@ -19,6 +19,8 @@ const Nav: FC<NavProps> = (props: NavProps): ReactElement<NavProps> => {
 
   const theme = useTheme() as Theme;
 
+  const { textColor, navActiveColor, navActiveBackgroundColor } = theme;
+
   return (
     <ul
       css={css`
@@ -32,13 +34,13 @@ const Nav: FC<NavProps> = (props: NavProps): ReactElement<NavProps> => {
           height: 32px;
           padding: 6px 20px;
           box-sizing: border-box;
-          color: ${theme.navColor};
+          color: ${textColor};
           opacity: 1;
           cursor: pointer;
 
           &:hover {
-            color: ${theme.navActiveColor};
-            background-color: ${theme.navActiveBackgroundColor};
+            color: ${navActiveColor};
+            background-color: ${navActiveBackgroundColor};
           }
         }
       `}

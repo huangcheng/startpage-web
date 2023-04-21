@@ -1,11 +1,12 @@
 export type Theme = Record<
+  | 'siteBackgroundColor'
+  | 'textColor'
   | 'backgroundColor'
   | 'containerBackgroundColor'
   | 'borderColor'
   | 'searchBackgroundColor'
   | 'navActiveColor'
   | 'navActiveBackgroundColor'
-  | 'navColor'
   | 'logoColor',
   string
 >;

@@ -1,23 +1,38 @@
+import { ReactElement, useMemo } from 'react';
 import { css } from '@emotion/react';
 
-import { Search } from 'components';
+import { Search, Category } from 'components';
 import { useFetchCategoryQuery } from 'hooks/request';
 
-export default function Home(): JSX.Element {
-  const categoryQuery = useFetchCategoryQuery();
+import type { Category as CategoryType } from 'types/response';
 
-  // eslint-disable-next-line no-console
-  console.log(categoryQuery?.data);
+export default function Home(): JSX.Element {
+  const { data } = useFetchCategoryQuery();
+
+  const categories = useMemo<CategoryType[]>(() => data?.data ?? [], [data]);
 
   return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      `}
-    >
-      <Search />
+    <div>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        `}
+      >
+        <Search />
+      </div>
+      <div
+        css={css`
+          margin-top: 60px;
+        `}
+      >
+        {categories.map(
+          ({ description, id }: CategoryType): ReactElement => (
+            <Category id={id} title={description} key={id} />
+          ),
+        )}
+      </div>
     </div>
   );
 }

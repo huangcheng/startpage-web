@@ -1,9 +1,7 @@
-import { useMemo } from 'react';
 import { css, useTheme } from '@emotion/react';
 
 import type { FC, ReactElement } from 'react';
 
-import { useFetchCategorySitesQuery } from 'hooks/request';
 import { Site } from 'components';
 
 import folder from 'assets/images/icons/folder.png';
@@ -12,20 +10,16 @@ import type { Theme } from 'types/theme';
 import type { Site as SiteType } from 'types/response';
 
 export interface CategoryProps {
-  id: number;
+  sites: SiteType[];
   title: string;
 }
 
 const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<CategoryProps> => {
-  const { id, title } = props;
+  const { sites, title } = props;
 
   const theme = useTheme() as Theme;
 
   const { textColor } = theme;
-
-  const { data } = useFetchCategorySitesQuery(id);
-
-  const sites = useMemo<SiteType[]>(() => data?.data ?? [], [data]);
 
   return (
     <section

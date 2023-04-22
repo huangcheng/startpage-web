@@ -8,14 +8,10 @@ const request = axios.create({
 });
 
 request.interceptors.response.use((response: AxiosResponse<ApiResponse>): AxiosResponse<ApiResponse> => {
-  if (response.status === 200) {
-    const data = response.data;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { code, message, ...rest } = data;
+  const { data, status } = response;
 
-    if (code === 0) {
-      return { ...rest } as unknown as AxiosResponse<ApiResponse>;
-    }
+  if (status === 200) {
+    return data as unknown as AxiosResponse<ApiResponse>;
   }
 
   return undefined as unknown as AxiosResponse<ApiResponse>;

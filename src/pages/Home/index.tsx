@@ -1,15 +1,17 @@
 import { ReactElement, useMemo } from 'react';
 import { css } from '@emotion/react';
 
-import { Search, Category } from 'components';
-import { useFetchCategoryQuery } from 'hooks/request';
+import { Category, Search } from 'components';
+import { useFetchCategoryQuery, useFetchCategorySitesQuery } from 'hooks/request';
 
-import type { Category as CategoryType } from 'types/response';
+import type { Category as CategoryType, CategorySites } from 'types/response';
 
-export default function Home(): JSX.Element {
+export default function Home(): ReactElement {
   const { data } = useFetchCategoryQuery();
 
-  const categories = useMemo<CategoryType[]>(() => data?.data ?? [], [data]);
+  const categories = useMemo<CategoryType[]>(() => data ?? [], [data]);
+
+  const { data: categorySites = [] } = useFetchCategorySitesQuery(categories);
 
   return (
     <div>
@@ -27,11 +29,11 @@ export default function Home(): JSX.Element {
           margin-top: 60px;
         `}
       >
-        {categories.map(
-          ({ description, id }: CategoryType): ReactElement => (
-            <Category id={id} title={description} key={id} />
-          ),
-        )}
+        {categorySites
+          .map(({ name, description, sites }: CategorySites): ReactElement | undefined =>
+            sites.length > 0 ? <Category key={name} sites={sites} title={description} /> : undefined,
+          )
+          .filter(Boolean)}
       </div>
     </div>
   );

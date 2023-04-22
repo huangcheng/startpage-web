@@ -132,6 +132,9 @@ devDependencies:
   '@hookform/devtools':
     specifier: ^4.3.1
     version: 4.3.1(@types/react@18.0.37)(react-dom@18.2.0)(react@18.2.0)
+  '@hot-loader/react-dom':
+    specifier: ^17.0.2
+    version: 17.0.2(react@18.2.0)
   '@redux-devtools/extension':
     specifier: ^3.2.5
     version: 3.2.5(redux@4.2.1)
@@ -2732,6 +2735,18 @@ packages:
       uuid: 8.3.2
     transitivePeerDependencies:
       - '@types/react'
+    dev: true
+
+  /@hot-loader/react-dom@17.0.2(react@18.2.0):
+    resolution:
+      { integrity: sha512-G2RZrFhsQClS+bdDh/Ojpk3SgocLPUGnvnJDTQYnmKSSwXtU+Yh+8QMs+Ia3zaAvBiOSpIIDSUxuN69cvKqrWg== }
+    peerDependencies:
+      react: 17.0.2
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      react: 18.2.0
+      scheduler: 0.20.2
     dev: true
 
   /@humanwhocodes/config-array@0.11.8:
@@ -13011,6 +13026,14 @@ packages:
     engines: { node: '>=v12.22.7' }
     dependencies:
       xmlchars: 2.2.0
+    dev: true
+
+  /scheduler@0.20.2:
+    resolution:
+      { integrity: sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ== }
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
     dev: true
 
   /scheduler@0.23.0:

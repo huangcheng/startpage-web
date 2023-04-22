@@ -4,8 +4,6 @@ import type { Observable } from 'rxjs';
 
 import { request } from 'utils';
 
-import type { Pagination } from 'types/request';
-import type { FetchCategoryResult } from 'types/response';
+import type { Category } from 'types/response';
 
-export const fetchCategory = (page: Pagination): Observable<FetchCategoryResult> =>
-  from<Promise<FetchCategoryResult>>(request.get('/category/all', { params: page }));
+export const fetchCategory = (): Observable<Category[]> => from<Promise<Category[]>>(request.get('/categories'));

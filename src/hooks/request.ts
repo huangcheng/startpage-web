@@ -1,36 +1,31 @@
 import { useQuery } from 'react-query';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import type { Observable } from 'rxjs';
 import type { UseQueryResult } from 'react-query';
 
 import { fetchCategory, fetchSitesByCategory } from 'apis';
 
-import type { FetchCategoryResult, FetchSitesByCategoryResult } from 'types/response';
-import type { Pagination } from 'types/request';
+import type { Category, Site, CategorySites } from 'types/response';
 
-export function useFetchCategoryQuery(pagination?: Pagination): UseQueryResult<FetchCategoryResult> {
-  const page = pagination?.page ?? 0;
-  const size = pagination?.size ?? 100;
+export function useFetchCategoryQuery(): UseQueryResult<Category[]> {
+  return useQuery<Category[], Error>(['fetchCategory'], async (): Promise<Category[]> => {
+    const result$: Observable<Category[]> = fetchCategory();
 
-  return useQuery<FetchCategoryResult, Error>(['fetchCategory', page, size], async (): Promise<FetchCategoryResult> => {
-    const result$: Observable<FetchCategoryResult> = fetchCategory({ page, size });
-
-    return await lastValueFrom<FetchCategoryResult>(result$);
+    return await lastValueFrom<Category[]>(result$);
   });
 }
 
-export function useFetchCategorySitesQuery(
-  id: number,
-  pagination?: Pagination,
-): UseQueryResult<FetchSitesByCategoryResult> {
-  const page = pagination?.page ?? 0;
-  const size = pagination?.size ?? 100;
-
-  return useQuery<FetchSitesByCategoryResult, Error>(
-    ['fetchSitesByCategory', id, page, size],
-    async (): Promise<FetchSitesByCategoryResult> => {
-      const result$: Observable<FetchSitesByCategoryResult> = fetchSitesByCategory(id, { page, size });
+export function useFetchCategorySitesQuery(categories: Category[]): UseQueryResult<CategorySites[]> {
+  return useQuery<CategorySites[], Error>(
+    ['fetchSitesByCategory', categories.map(({ id }) => id)],
+    async (): Promise<CategorySites[]> => {
+      const result$: Observable<CategorySites[]> = forkJoin(categories.map(({ id }) => fetchSitesByCategory(id))).pipe(
+        map<Site[][], CategorySites[]>((sites) =>
+          categories.map((category, index) => ({ ...category, sites: sites[index] })),
+        ),
+      );
 
       return await lastValueFrom(result$);
     },

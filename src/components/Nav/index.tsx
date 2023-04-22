@@ -15,7 +15,7 @@ export interface NavProps {
 const Nav: FC<NavProps> = (props: NavProps): ReactElement<NavProps> => {
   const { data } = useFetchCategoryQuery();
 
-  const navItems = useMemo<Category[]>(() => data?.data ?? [], [data]);
+  const navItems = useMemo<Category[]>(() => data ?? [], [data]);
 
   const theme = useTheme() as Theme;
 

@@ -27,7 +27,7 @@ export function useFetchCategorySitesQuery(categories: Category[]): UseQueryResu
         ),
       );
 
-      return await lastValueFrom(result$);
+      return await lastValueFrom<CategorySites[]>(result$);
     },
   );
 }

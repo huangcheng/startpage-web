@@ -1,19 +1,19 @@
-export type Category = {
+export interface Category {
   description: string;
   id: number;
   name: string;
-};
+}
 
-export type Site = {
+export interface Site {
   description: string;
   icon: string;
   id: number;
   name: string;
   url: string;
-};
+}
 
-export type CategorySites = Category & {
+export interface CategorySites extends Category {
   sites: Site[];
-};
+}
 
 export type ApiResponse = Category[] | Site[];

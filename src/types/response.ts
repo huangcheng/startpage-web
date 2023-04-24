@@ -1,13 +1,13 @@
 export interface Category {
   description: string;
-  id: number;
+  id: string;
   name: string;
 }
 
 export interface Site {
   description: string;
   icon: string;
-  id: number;
+  id: string;
   name: string;
   url: string;
 }

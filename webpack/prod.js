@@ -2,6 +2,7 @@ const { resolve } = require('node:path');
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const RequestHtmlWebpackPlugin = require('../plugins/request-html-webpack-plugin');
 
 module.exports = {
   devtool: false,
@@ -65,5 +66,6 @@ module.exports = {
       analyzerMode: 'static',
       openAnalyzer: false,
     }),
+    new RequestHtmlWebpackPlugin(),
   ],
 };

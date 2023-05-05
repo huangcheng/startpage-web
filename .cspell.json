@@ -33,5 +33,6 @@
       "path": "./.cspell/dict.dic",
       "addWards": true
     }
-  ]
+  ],
+  "ignorePaths": ["node_modules/**", "index.ejs"]
 }

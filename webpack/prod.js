@@ -1,8 +1,9 @@
+const rxjs = require('rxjs');
 const { resolve } = require('node:path');
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const RequestHtmlWebpackPlugin = require('../plugins/request-html-webpack-plugin');
+const HtmlWebpackTemplatePlugin = require('../plugins/html-webpack-template-plugin');
 
 module.exports = {
   devtool: false,
@@ -66,6 +67,32 @@ module.exports = {
       analyzerMode: 'static',
       openAnalyzer: false,
     }),
-    new RequestHtmlWebpackPlugin(),
+    new HtmlWebpackTemplatePlugin({
+      func: (data) =>
+        new Promise((resolve) => {
+          rxjs
+            .from(fetch(`${process.env.API_URI}/categories`).then((response) => response.json()))
+            .pipe(
+              rxjs.switchMap((categories) =>
+                rxjs
+                  .forkJoin(
+                    (categories || []).map((category) =>
+                      fetch(`${process.env.API_URI}/category/${category.id}/sites`).then((response) => response.json()),
+                    ),
+                  )
+                  .pipe(
+                    rxjs.map((sites) => sites.map((site, index) => ({ ...categories[index], sites: site }))),
+                    rxjs.map((sites) => [categories, sites]),
+                  ),
+              ),
+            )
+            .subscribe(([categories, sections]) => {
+              data.plugin.options.templateParameters.categories = categories;
+              data.plugin.options.templateParameters.sections = sections;
+
+              resolve(data);
+            });
+        }),
+    }),
   ],
 };

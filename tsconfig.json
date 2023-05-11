@@ -39,6 +39,7 @@
       "constant/*": ["constant/*"],
       "hooks/*": ["hooks/*"],
       "layouts/*": ["layouts/*"],
+      "locales/*": ["locales/*"],
       "reducers/*": ["reducers/*"],
       "styles/*": ["styles/*"],
       "types/*": ["types/*"],

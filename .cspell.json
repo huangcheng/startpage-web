@@ -25,7 +25,8 @@
     "shrkm",
     "unmocked",
     "csrftoken",
-    "reduxjs"
+    "reduxjs",
+    "Antd"
   ],
   "dictionaryDefinitions": [
     {

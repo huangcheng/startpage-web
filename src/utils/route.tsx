@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { Spin } from 'antd';
 
 import type { ComponentType } from 'react';
 
@@ -10,7 +11,7 @@ export const load = (page: string): JSX.Element => {
   );
 
   return (
-    <Suspense fallback={<div />}>
+    <Suspense fallback={<Spin spinning size="large" delay={500} style={{ height: '100vh', width: '100vw' }} />}>
       <Component />
     </Suspense>
   );

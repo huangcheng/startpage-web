@@ -69,6 +69,7 @@ module.exports = {
       constant: resolve(srcDir, 'constant'),
       hooks: resolve(srcDir, 'hooks'),
       layouts: resolve(srcDir, 'layouts'),
+      locales: resolve(srcDir, 'locales'),
       reducers: resolve(srcDir, 'reducers'),
       styles: resolve(srcDir, 'styles'),
       themes: resolve(srcDir, 'themes'),

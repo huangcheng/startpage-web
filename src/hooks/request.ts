@@ -1,13 +1,14 @@
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 import { lastValueFrom, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import type { Observable } from 'rxjs';
-import type { UseQueryResult } from 'react-query';
+import type { UseQueryResult, UseMutationResult } from 'react-query';
 
-import { fetchCategory, fetchSitesByCategory } from 'apis';
+import { fetchCategory, fetchSitesByCategory, login } from 'apis';
 
 import type { Category, Site, CategorySites } from 'types/response';
+import type { User } from 'types/request';
 
 export function useFetchCategoryQuery(): UseQueryResult<Category[]> {
   return useQuery<Category[], Error>(['fetchCategory'], async (): Promise<Category[]> => {
@@ -30,4 +31,12 @@ export function useFetchCategorySitesQuery(categories: Category[]): UseQueryResu
       return await lastValueFrom<CategorySites[]>(result$);
     },
   );
+}
+
+export function useLoginMutation(): UseMutationResult<void, Error, User> {
+  return useMutation<void, Error, User>(['login'], async (user: User): Promise<void> => {
+    const result$: Observable<void> = login(user);
+
+    return await lastValueFrom<void>(result$);
+  });
 }

@@ -5,6 +5,10 @@ const theme: Theme = {
   borderColor: '#E0E2E5',
 
   containerBackgroundColor: '#F7F8FA',
+
+  /* Login */
+  loginBackgroundColor: '#F7F8FA',
+
   logoColor: '#161A3B',
 
   /* Nav */

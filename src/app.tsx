@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { Global, css, ThemeProvider, useTheme } from '@emotion/react';
+import { Global, css, ThemeProvider } from '@emotion/react';
 import i18next from 'i18next';
 import { I18nextProvider } from 'react-i18next';
 
@@ -8,26 +8,16 @@ import { hot } from 'react-hot-loader/root';
 
 import type { ReactElement } from 'react';
 
-import { MainContent, Side, Head } from 'layouts';
-
-import logo from 'assets/images/logo.png';
-
 import { useSelector } from 'hooks/store';
-import { Logo, Nav } from 'components';
 
 import store from './store';
 import routes from './routes';
 import themes from './themes';
 
-import type { Theme } from 'types/theme';
-
 const i18nInstance = i18next.createInstance();
 
 const Container = (): ReactElement => {
   const content = useRoutes(routes);
-  const theme = useTheme() as Theme;
-
-  const { containerBackgroundColor, borderColor } = theme;
 
   return (
     <>
@@ -38,39 +28,7 @@ const Container = (): ReactElement => {
           }
         `}
       />
-      <div
-        css={css`
-          align-content: stretch;
-          display: flex;
-        `}
-      >
-        <Side
-          style={{
-            backgroundColor: containerBackgroundColor,
-          }}
-        >
-          <Logo src={logo} />
-          <Nav
-            style={{
-              marginTop: 10,
-            }}
-          />
-        </Side>
-        <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            flex: auto;
-          `}
-        >
-          <Head
-            style={{
-              borderBottom: `1px solid ${borderColor}`,
-            }}
-          />
-          <MainContent>{content}</MainContent>
-        </div>
-      </div>
+      {content}
     </>
   );
 };

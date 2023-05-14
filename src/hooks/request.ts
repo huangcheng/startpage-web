@@ -7,8 +7,9 @@ import type { UseQueryResult, UseMutationResult } from 'react-query';
 
 import { fetchCategory, fetchSitesByCategory, login } from 'apis';
 
-import type { Category, Site, CategorySites } from 'types/response';
+import type { Category, Site, CategorySites, UserInfo } from 'types/response';
 import type { User } from 'types/request';
+import { fetchUser } from 'apis/user';
 
 export function useFetchCategoryQuery(): UseQueryResult<Category[]> {
   return useQuery<Category[], Error>(['fetchCategory'], async (): Promise<Category[]> => {
@@ -38,5 +39,13 @@ export function useLoginMutation(): UseMutationResult<void, Error, User> {
     const result$: Observable<void> = login(user);
 
     return await lastValueFrom<void>(result$);
+  });
+}
+
+export function useUserInfoMutation(): UseMutationResult<UserInfo, Error, void> {
+  return useMutation<UserInfo, Error, void>(['getUserInfo'], async (): Promise<UserInfo> => {
+    const result$: Observable<UserInfo> = fetchUser();
+
+    return await lastValueFrom<UserInfo>(result$);
   });
 }

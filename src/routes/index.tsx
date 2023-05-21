@@ -11,6 +11,10 @@ const routes: RouteObject[] = [
     element: load('Login'),
     path: '/login',
   },
+  {
+    element: load('Admin'),
+    path: '/admin',
+  },
 ];
 
 export default routes;

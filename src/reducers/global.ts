@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { Draft, PayloadAction } from '@reduxjs/toolkit';
 
 import type { Themes } from 'types/theme';
+
 import type { Language } from '../locales';
 
 export type GlobalState = {

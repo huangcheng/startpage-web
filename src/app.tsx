@@ -3,6 +3,7 @@ import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Global, css, ThemeProvider } from '@emotion/react';
 import { I18nextProvider } from 'react-i18next';
+import { ConfigProvider, App as AntdApp } from 'antd';
 import Cookie from 'js-cookie';
 
 import { hot } from 'react-hot-loader/root';
@@ -65,11 +66,15 @@ const App = (): JSX.Element => {
   return (
     <Provider store={store}>
       <I18nextProvider i18n={i18n}>
-        <Router>
-          <ThemeProvider theme={themes[theme]}>
-            <Container />
-          </ThemeProvider>
-        </Router>
+        <ConfigProvider>
+          <AntdApp>
+            <Router>
+              <ThemeProvider theme={themes[theme]}>
+                <Container />
+              </ThemeProvider>
+            </Router>
+          </AntdApp>
+        </ConfigProvider>
       </I18nextProvider>
     </Provider>
   );

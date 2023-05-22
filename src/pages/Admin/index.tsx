@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -7,7 +7,7 @@ import { useCookie } from 'react-use';
 import { Button, Menu } from 'antd';
 import { FileTextOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
-import type { ReactElement } from 'react';
+import type { ReactElement, Key } from 'react';
 
 import { useNavs } from 'hooks/store/admin';
 
@@ -26,6 +26,13 @@ export default function Admin(): ReactElement {
 
   const [token] = useCookie('token');
 
+  const icons = useMemo<Record<Key, ReactElement>>(
+    () => ({
+      categories: <FileTextOutlined />,
+    }),
+    [],
+  );
+
   useEffect(() => {
     if (token === undefined || (token ?? '').length === 0) {
       navigate('/login');
@@ -35,7 +42,6 @@ export default function Admin(): ReactElement {
   useEffect(() => {
     setNavs([
       {
-        icon: <FileTextOutlined />,
         key: 'categories',
         label: t('CATEGORIES') ?? '',
       },
@@ -74,7 +80,12 @@ export default function Admin(): ReactElement {
           <img css={{ height: 36, width: 36 }} src={logo} alt="logo" />
           {!collapsed && <h2 css={{ fontSize: '18px', margin: 0 }}>START PAGE</h2>}
         </motion.div>
-        <Menu items={navs} defaultSelectedKeys={['categories']} mode="inline" inlineCollapsed={collapsed} />
+        <Menu
+          items={navs.map((nav) => ({ ...nav, icon: icons[nav.key] }))}
+          defaultSelectedKeys={['categories']}
+          mode="inline"
+          inlineCollapsed={collapsed}
+        />
       </motion.div>
       <motion.div
         layout

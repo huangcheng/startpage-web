@@ -1,7 +1,5 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
 import { useTheme } from '@emotion/react';
-import { Form, Button, Input, message } from 'antd';
+import { Form, Button, Input } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -14,36 +12,13 @@ import type { User } from 'types/request';
 
 import bg from 'assets/images/login_bg.svg';
 
-const { useMessage } = message;
-
 export default function Login(): ReactElement {
   const theme = useTheme() as Theme;
   const { loginBackgroundColor, backgroundColor } = theme;
 
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [messageApi, contextHolder] = useMessage();
-
-  const { isLoading, isError, isSuccess, mutate } = useLoginMutation();
-
-  useEffect(() => {
-    if (isError) {
-      void messageApi.open({
-        content: t('USERNAME_OR_PASSWORD_IS_INCORRECT').toString(),
-        type: 'error',
-      });
-    }
-
-    if (isSuccess) {
-      void messageApi
-        .open({
-          content: t('LOGIN_SUCCESS').toString(),
-          type: 'success',
-        })
-        .then(() => navigate('/admin'));
-    }
-  }, [isError, isSuccess, messageApi, t, navigate]);
+  const { isLoading, mutate } = useLoginMutation();
 
   return (
     <div
@@ -55,7 +30,6 @@ export default function Login(): ReactElement {
         width: '100vw',
       }}
     >
-      {contextHolder}
       <div css={{ background: `url(${bg}) center no-repeat;`, flex: 'auto' }} />
       <div
         css={{

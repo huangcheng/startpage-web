@@ -1,3 +1,5 @@
+export type pages = 'home' | 'login' | 'admin';
+
 export type Theme = Record<
   | 'loginBackgroundColor'
   | 'siteBackgroundColor'

@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from '@emotion/react';
+import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router';
+import { useCookie } from 'react-use';
 import { Button, Menu } from 'antd';
 import { FileTextOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
@@ -10,16 +14,23 @@ import { useNavs } from 'hooks/store/admin';
 import type { Theme } from 'types/theme';
 
 import logo from 'assets/images/logo.png';
-import { useTranslation } from 'react-i18next';
 
 export default function Admin(): ReactElement {
+  const navigate = useNavigate();
   const { t } = useTranslation();
-
   const [collapsed, setCollapsed] = useState(false);
 
   const theme = useTheme() as Theme;
 
   const [navs, setNavs] = useNavs();
+
+  const [token] = useCookie('token');
+
+  useEffect(() => {
+    if (token === undefined || (token ?? '').length === 0) {
+      navigate('/login');
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     setNavs([
@@ -40,7 +51,8 @@ export default function Admin(): ReactElement {
         width: '100vw',
       }}
     >
-      <div
+      <motion.div
+        layout
         css={{
           backgroundColor: theme.containerBackgroundColor,
           boxSizing: 'border-box',
@@ -48,13 +60,24 @@ export default function Admin(): ReactElement {
           width: collapsed ? 112 : 240,
         }}
       >
-        <div css={{ alignItems: 'center', display: 'flex', gap: 10, height: 72, marginBottom: 24 }}>
+        <motion.div
+          layout
+          css={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 10,
+            height: 72,
+            justifyContent: collapsed ? 'center' : 'flex-start',
+            marginBottom: 24,
+          }}
+        >
           <img css={{ height: 36, width: 36 }} src={logo} alt="logo" />
           {!collapsed && <h2 css={{ fontSize: '18px', margin: 0 }}>START PAGE</h2>}
-        </div>
+        </motion.div>
         <Menu items={navs} defaultSelectedKeys={['categories']} mode="inline" inlineCollapsed={collapsed} />
-      </div>
-      <div
+      </motion.div>
+      <motion.div
+        layout
         css={{
           flex: 'auto',
         }}
@@ -64,7 +87,7 @@ export default function Admin(): ReactElement {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

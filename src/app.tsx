@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Global, css, ThemeProvider } from '@emotion/react';
 import { I18nextProvider } from 'react-i18next';
 import { ConfigProvider, App as AntdApp } from 'antd';
-import Cookie from 'js-cookie';
+import { useCookie } from 'react-use';
 
 import { hot } from 'react-hot-loader/root';
 
@@ -41,7 +41,7 @@ const App = (): JSX.Element => {
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.global.theme);
   const locale = useSelector((state) => state.global.locale);
-  const token = useMemo(() => Cookie.get('token'), []);
+  const [token] = useCookie('token');
   const user = useUser();
   const { mutate, data } = useUserInfoMutation();
 
@@ -52,10 +52,10 @@ const App = (): JSX.Element => {
   }, [locale]);
 
   useEffect(() => {
-    if (token !== undefined && token.length > 0 && user === undefined) {
+    if (token !== undefined && (token ?? '').length > 0 && user === undefined) {
       mutate();
     }
-  }, [token, mutate, user]);
+  }, [mutate, token, user]);
 
   useEffect(() => {
     if (user === undefined && data !== undefined) {

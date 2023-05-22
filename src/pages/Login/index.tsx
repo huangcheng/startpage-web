@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import { useTheme } from '@emotion/react';
 import { Form, Button, Input, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
@@ -19,6 +20,7 @@ export default function Login(): ReactElement {
   const theme = useTheme() as Theme;
   const { loginBackgroundColor, backgroundColor } = theme;
 
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const [messageApi, contextHolder] = useMessage();
@@ -34,12 +36,14 @@ export default function Login(): ReactElement {
     }
 
     if (isSuccess) {
-      void messageApi.open({
-        content: t('LOGIN_SUCCESS').toString(),
-        type: 'success',
-      });
+      void messageApi
+        .open({
+          content: t('LOGIN_SUCCESS').toString(),
+          type: 'success',
+        })
+        .then(() => navigate('/admin'));
     }
-  }, [isError, isSuccess, messageApi, t]);
+  }, [isError, isSuccess, messageApi, t, navigate]);
 
   return (
     <div

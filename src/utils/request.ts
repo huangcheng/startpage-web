@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import Cookie from 'js-cookie';
 
 import type { AxiosResponse } from 'axios';
@@ -17,14 +17,26 @@ const request = axios.create({
   withCredentials: true,
 });
 
-request.interceptors.response.use((response: AxiosResponse<ApiResponse>): AxiosResponse<ApiResponse> => {
-  const { data, status } = response;
+request.interceptors.response.use(
+  (response: AxiosResponse<ApiResponse>): AxiosResponse<ApiResponse> => {
+    const { data, status } = response;
 
-  if (status === 200) {
-    return data as unknown as AxiosResponse<ApiResponse>;
-  }
+    if (status === 200) {
+      return data as unknown as AxiosResponse<ApiResponse>;
+    }
 
-  return undefined as unknown as AxiosResponse<ApiResponse>;
-});
+    return undefined as unknown as AxiosResponse<ApiResponse>;
+  },
+  (error: AxiosError) => {
+    const { response } = error;
+    const { status } = response ?? {};
+
+    if (status === 401) {
+      Cookie.remove('token');
+
+      window.location.href = '/login';
+    }
+  },
+);
 
 export default request;

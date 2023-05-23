@@ -2,14 +2,13 @@ import { useQuery, useMutation } from 'react-query';
 import { lastValueFrom, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { message } from 'antd';
-import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 import type { Observable } from 'rxjs';
 import type { UseQueryResult, UseMutationResult } from 'react-query';
 import type { AxiosError } from 'axios';
 
-import { fetchCategory, fetchSitesByCategory, login, fetchUser } from 'apis';
+import { fetchCategory, fetchSitesByCategory, login, fetchUser, logout } from 'apis';
 
 import type { Category, Site, CategorySites, UserInfo } from 'types/response';
 import type { User } from 'types/request';
@@ -39,7 +38,6 @@ export function useFetchCategorySitesQuery(categories: Category[]): UseQueryResu
 
 export function useLoginMutation(): UseMutationResult<void, Error, User> {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   return useMutation<void, Error, User>(
     ['login'],
@@ -62,7 +60,9 @@ export function useLoginMutation(): UseMutationResult<void, Error, User> {
         void message.error(message_);
       },
       onSuccess: () => {
-        void message.success(t('LOGIN_SUCCESS')).then((): void => navigate('/admin'));
+        void message.success(t('LOGIN_SUCCESS')).then((): void => {
+          window.location.href = '/admin';
+        });
       },
     },
   );
@@ -79,6 +79,26 @@ export function useUserInfoMutation(): UseMutationResult<UserInfo, Error, void> 
     {
       onError: (error) => {
         void message.error(error.message);
+      },
+    },
+  );
+}
+
+export function useLogoutMutation(): UseMutationResult<void, Error, void> {
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, void>(
+    ['logout'],
+    async (): Promise<void> => {
+      const result$: Observable<void> = logout();
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onSuccess: () => {
+        void message.success(t('LOGOUT_SUCCESS')).then((): void => {
+          window.location.href = '/login';
+        });
       },
     },
   );

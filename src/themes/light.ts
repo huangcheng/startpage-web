@@ -14,6 +14,8 @@ const theme: Theme = {
   /* Nav */
   navActiveBackgroundColor: 'rgba(240, 240, 240, 0.68);',
   navActiveColor: '#566EF0',
+  navBackgroundColor: '#F7F8FA',
+  navIconColor: '#566EF0',
 
   /* Search  */
   searchBackgroundColor: '#EFF2FA',

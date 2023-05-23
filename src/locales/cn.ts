@@ -5,6 +5,8 @@ const cn: Translations = {
   CATEGORY: '分类',
   LOGIN: '登录',
   LOGIN_SUCCESS: '登录成功',
+  LOGOUT: '退出',
+  LOGOUT_SUCCESS: '退出成功',
   NAVIGATION_ITEM: '导航项目',
   NAVIGATION_ITEMS: '导航项目',
   PLEASE_ENTER_YOUR_PASSWORD: '请输入密码',

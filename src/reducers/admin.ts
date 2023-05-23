@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { Draft } from '@reduxjs/toolkit';
-import type { MenuItemType } from 'antd/es/menu/hooks/useItems';
+import type { MenuProps } from 'antd';
 
 export type AdminState = {
-  navs?: MenuItemType[];
+  navs?: MenuProps['items'];
 };
 
 const initialState: AdminState = {
@@ -15,7 +15,7 @@ const adminSlice = createSlice({
   initialState,
   name: 'admin',
   reducers: {
-    setNavs: (state: Draft<AdminState>, action: PayloadAction<MenuItemType[]>) => {
+    setNavs: (state: Draft<AdminState>, action: PayloadAction<MenuProps['items']>) => {
       state.navs = action.payload;
     },
   },

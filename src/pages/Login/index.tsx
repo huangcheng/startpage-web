@@ -48,7 +48,7 @@ export default function Login(): ReactElement {
         </h2>
         <Form<User> size="large" onFinish={mutate}>
           <Form.Item name="username" rules={[{ message: t('PLEASE_ENTER_YOUR_USERNAME').toString(), required: true }]}>
-            <Input prefix={<UserOutlined />} />
+            <Input autoComplete="off" prefix={<UserOutlined />} />
           </Form.Item>
           <Form.Item
             required

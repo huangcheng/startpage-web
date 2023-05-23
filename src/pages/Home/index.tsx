@@ -1,8 +1,8 @@
 import { ReactElement, useMemo } from 'react';
 import { css, useTheme } from '@emotion/react';
 
-import { Head, MainContent, Side } from 'layouts';
-import { Category, Logo, Nav, Search } from 'components';
+import { MainContent, Side } from 'layouts';
+import { Category, Logo, Nav, Search, Header } from 'components';
 import { useFetchCategoryQuery, useFetchCategorySitesQuery } from 'hooks/request';
 
 import type { Category as CategoryType, CategorySites } from 'types/response';
@@ -12,7 +12,7 @@ import logo from 'assets/images/logo.png';
 
 export default function Home(): ReactElement {
   const theme = useTheme() as Theme;
-  const { containerBackgroundColor, borderColor } = theme;
+  const { containerBackgroundColor } = theme;
 
   const { data } = useFetchCategoryQuery();
 
@@ -46,11 +46,7 @@ export default function Home(): ReactElement {
           flex: auto;
         `}
       >
-        <Head
-          style={{
-            borderBottom: `1px solid ${borderColor}`,
-          }}
-        />
+        <Header />
         <MainContent>
           {' '}
           <div>

@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTheme } from '@emotion/react';
+import { useTheme, Global } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 import { useCookie } from 'react-use';
-import { Button, Menu } from 'antd';
-import { FileTextOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
+import { FileTextOutlined } from '@ant-design/icons';
 
 import type { ReactElement, Key } from 'react';
 
 import { useNavs } from 'hooks/store/admin';
+import { Header } from 'components';
 
 import type { Theme } from 'types/theme';
 
@@ -28,9 +29,10 @@ export default function Admin(): ReactElement {
 
   const icons = useMemo<Record<Key, ReactElement>>(
     () => ({
-      categories: <FileTextOutlined />,
+      categories: <FileTextOutlined style={{ color: theme.navIconColor }} />,
+      navigation: <FileTextOutlined style={{ color: theme.navIconColor }} />,
     }),
-    [],
+    [theme],
   );
 
   useEffect(() => {
@@ -45,6 +47,10 @@ export default function Admin(): ReactElement {
         key: 'categories',
         label: t('CATEGORIES') ?? '',
       },
+      {
+        key: 'navigation',
+        label: t('NAVIGATION_ITEMS') ?? '',
+      },
     ]);
   }, [t, setNavs]);
 
@@ -54,9 +60,27 @@ export default function Admin(): ReactElement {
         alignItems: 'stretch',
         display: 'flex',
         height: '100vh',
+        justifyContent: 'stretch',
         width: '100vw',
       }}
     >
+      <Global
+        styles={`
+        .ant-menu {
+          border-inline-end: none !important;
+        }
+
+        .ant-menu-light {
+          color: ${theme.textColor};
+          background-color: ${theme.navBackgroundColor};
+         }
+
+        .ant-menu-item.ant-menu-item-selected {
+          color: ${theme.textColor};
+          background-color: ${theme.navActiveBackgroundColor};
+        }
+      `}
+      />
       <motion.div
         layout
         css={{
@@ -87,18 +111,19 @@ export default function Admin(): ReactElement {
           inlineCollapsed={collapsed}
         />
       </motion.div>
-      <motion.div
-        layout
+      <div
         css={{
+          display: 'flex',
           flex: 'auto',
+          flexDirection: 'column',
+          justifyContent: 'stretch',
         }}
       >
-        <div>
-          <Button type="primary" onClick={(): void => setCollapsed(!collapsed)}>
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </Button>
+        <Header collapsed={collapsed} onCollapse={setCollapsed} />
+        <div css={{ boxSizing: 'border-box', flex: 'auto', padding: '40px' }}>
+          <Outlet />
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

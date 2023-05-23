@@ -10,6 +10,8 @@ export type Theme = Record<
   | 'searchBackgroundColor'
   | 'navActiveColor'
   | 'navActiveBackgroundColor'
+  | 'navBackgroundColor'
+  | 'navIconColor'
   | 'logoColor',
   string
 >;

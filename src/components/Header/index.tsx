@@ -42,6 +42,13 @@ const Header: FC<HeaderProps> = (props: HeaderProps): ReactElement<HeaderProps> 
           </span>
         ),
       },
+      {
+        key: 'settings',
+        label: (
+          // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+          <span>{t('PERSONAL_SETTINGS')}</span>
+        ),
+      },
     ],
     [mutate, t],
   );

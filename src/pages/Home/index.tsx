@@ -1,5 +1,7 @@
-import { ReactElement, useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { css, useTheme } from '@emotion/react';
+
+import type { ReactElement } from 'react';
 
 import { MainContent, Side } from 'layouts';
 import { Category, Logo, Nav, Search, Header } from 'components';
@@ -20,11 +22,15 @@ export default function Home(): ReactElement {
 
   const { data: categorySites = [] } = useFetchCategorySitesQuery(categories);
 
+  const ref = useRef<HTMLElement | null>(null);
+
   return (
     <div
       css={css`
         align-content: stretch;
         display: flex;
+        height: 100vh;
+        width: 100vw;
       `}
     >
       <Side
@@ -37,6 +43,14 @@ export default function Home(): ReactElement {
           style={{
             marginTop: 10,
           }}
+          items={categorySites
+            .filter(({ sites }) => sites.length > 0)
+            .map(({ id, name, description }) => ({
+              description,
+              id,
+              name,
+            }))}
+          getContainer={(): HTMLElement | Window => ref.current ?? window}
         />
       </Side>
       <div
@@ -44,12 +58,17 @@ export default function Home(): ReactElement {
           display: flex;
           flex-direction: column;
           flex: auto;
+          height: 100vh;
         `}
       >
         <Header />
-        <MainContent>
-          {' '}
-          <div>
+        <MainContent ref={ref}>
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+            `}
+          >
             <div
               css={css`
                 display: flex;
@@ -62,11 +81,12 @@ export default function Home(): ReactElement {
             <div
               css={css`
                 margin-top: 60px;
+                flex: auto;
               `}
             >
               {categorySites
                 .map(({ name, description, sites }: CategorySites): ReactElement | undefined =>
-                  sites.length > 0 ? <Category key={name} sites={sites} title={description} /> : undefined,
+                  sites.length > 0 ? <Category key={name} id={name} sites={sites} title={description} /> : undefined,
                 )
                 .filter(Boolean)}
             </div>

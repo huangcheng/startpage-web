@@ -10,12 +10,13 @@ import type { Theme } from 'types/theme';
 import type { Site as SiteType } from 'types/response';
 
 export interface CategoryProps {
+  id?: string;
   sites: SiteType[];
   title: string;
 }
 
 const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<CategoryProps> => {
-  const { sites, title } = props;
+  const { id, sites, title } = props;
 
   const theme = useTheme() as Theme;
 
@@ -23,6 +24,7 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
 
   return (
     <section
+      id={id}
       css={css`
         margin-bottom: 48px;
       `}

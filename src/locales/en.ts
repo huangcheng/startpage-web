@@ -9,6 +9,7 @@ const en: Translations = {
   LogOUT_SUCCESS: 'Logout Success',
   NAVIGATION_ITEM: 'Navigation Item',
   NAVIGATION_ITEMS: 'Navigation Items',
+  PERSONAL_SETTINGS: 'Personal Settings',
   PLEASE_ENTER_YOUR_PASSWORD: 'Please Enter Your Password',
   PLEASE_ENTER_YOUR_USERNAME: 'Please Enter Your Username',
   USERNAME_OR_PASSWORD_IS_INCORRECT: 'Username or Password is Incorrect',

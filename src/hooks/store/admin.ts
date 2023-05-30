@@ -18,5 +18,5 @@ export const useNavs = (): [MenuItemType[], (navs: MenuItemType[]) => void] => {
     [dispatch],
   );
 
-  return [navs, setNavs];
+  return [navs as MenuItemType[], setNavs];
 };

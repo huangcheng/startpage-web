@@ -24,6 +24,7 @@ const theme: Theme = {
   siteBackgroundColor: '#F7F8FA',
 
   textColor: '#161A3B',
+  titleColor: '#1D2126',
 };
 
 export default theme;

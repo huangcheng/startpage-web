@@ -4,6 +4,7 @@ export type Theme = Record<
   | 'loginBackgroundColor'
   | 'siteBackgroundColor'
   | 'textColor'
+  | 'titleColor'
   | 'backgroundColor'
   | 'containerBackgroundColor'
   | 'borderColor'

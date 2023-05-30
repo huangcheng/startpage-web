@@ -1,4 +1,5 @@
 import { from } from 'rxjs';
+import omit from 'lodash-es/omit';
 
 import type { Observable } from 'rxjs';
 
@@ -12,3 +13,6 @@ export const login = (user: User): Observable<void> => from<Promise<void>>(reque
 export const fetchUser = (): Observable<UserInfo> => from<Promise<UserInfo>>(request.get('/user'));
 
 export const logout = (): Observable<void> => from<Promise<void>>(request.post('/logout'));
+
+export const modifyUser = (user: Omit<UserInfo, 'roles'>): Observable<void> =>
+  from<Promise<void>>(request.put(`/user/${user.username}`, omit(user, 'username')));

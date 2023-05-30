@@ -12,6 +12,12 @@ const routes: RouteObject[] = [
     path: '/login',
   },
   {
+    children: [
+      {
+        element: load('Admin/Profile'),
+        path: 'profile',
+      },
+    ],
     element: load('Admin'),
     path: '/admin',
   },

@@ -8,7 +8,9 @@ import type { Observable } from 'rxjs';
 import type { UseQueryResult, UseMutationResult } from 'react-query';
 import type { AxiosError } from 'axios';
 
-import { fetchCategory, fetchSitesByCategory, login, fetchUser, logout } from 'apis';
+import { useDispatch } from 'hooks/store';
+import { setUser } from 'reducers/user';
+import { fetchCategory, fetchSitesByCategory, login, fetchUser, logout, modifyUser } from 'apis';
 
 import type { Category, Site, CategorySites, UserInfo } from 'types/response';
 import type { User } from 'types/request';
@@ -99,6 +101,42 @@ export function useLogoutMutation(): UseMutationResult<void, Error, void> {
         void message.success(t('LOGOUT_SUCCESS')).then((): void => {
           window.location.href = '/login';
         });
+      },
+    },
+  );
+}
+
+export function useModifyUserMutation(): UseMutationResult<void, Error, UserInfo> {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  return useMutation<void, Error, UserInfo>(
+    ['modifyUser'],
+    async (user: UserInfo): Promise<void> => {
+      const result$: Observable<void> = modifyUser(user);
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onError: (error) => {
+        const { response } = error as AxiosError;
+        const { status } = response ?? {};
+
+        let message_ = error.message;
+
+        if (status === 401) {
+          message_ = t('PASSWORD_IS_INCORRECT');
+        }
+
+        void message.error(message_);
+      },
+      onSuccess: () => {
+        void message
+          .success(t('PERSONAL_INFORMATION_MODIFY_SUCCESS'))
+          .then(() => lastValueFrom(fetchUser()))
+          .then((user) => {
+            dispatch(setUser(user));
+          });
       },
     },
   );

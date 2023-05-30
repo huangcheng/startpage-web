@@ -1,4 +1,7 @@
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router';
 import { useTheme } from '@emotion/react';
+import { useTranslation } from 'react-i18next';
 import { Avatar, Button, Space, Dropdown } from 'antd';
 import { UserOutlined, MenuFoldOutlined, MenuUnfoldOutlined, DownOutlined } from '@ant-design/icons';
 
@@ -7,11 +10,10 @@ import type { MenuProps } from 'antd';
 
 import { Head } from 'layouts';
 
-import type { Theme } from 'types/theme';
 import { useUser } from 'hooks/store/user';
-import { useMemo } from 'react';
 import { useLogoutMutation } from 'hooks/request';
-import { useTranslation } from 'react-i18next';
+
+import type { Theme } from 'types/theme';
 
 export interface HeaderProps {
   collapsed?: boolean;
@@ -23,12 +25,20 @@ const Header: FC<HeaderProps> = (props: HeaderProps): ReactElement<HeaderProps> 
 
   const { t } = useTranslation();
   const { mutate } = useLogoutMutation();
+  const navigate = useNavigate();
 
   const theme = useTheme() as Theme;
   const user = useUser();
 
   const items = useMemo<MenuProps['items']>(
     () => [
+      {
+        key: 'settings',
+        label: (
+          // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+          <span onClick={(): void => navigate('/admin/profile')}>{t('PERSONAL_SETTINGS')}</span>
+        ),
+      },
       {
         key: 'logout',
         label: (
@@ -42,15 +52,8 @@ const Header: FC<HeaderProps> = (props: HeaderProps): ReactElement<HeaderProps> 
           </span>
         ),
       },
-      {
-        key: 'settings',
-        label: (
-          // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-          <span>{t('PERSONAL_SETTINGS')}</span>
-        ),
-      },
     ],
-    [mutate, t],
+    [mutate, t, navigate],
   );
 
   return (

@@ -55,7 +55,7 @@
     "@types/react-dom": "^18.2.17",
     "@types/react-redux": "^7.1.31",
     "@types/react-router-dom": "^5.3.3",
-    "@types/testing-library__jest-dom": "^5.14.9",
+    "@types/testing-library__jest-dom": "^6.0.0",
     "@types/webpack-env": "^1.18.4",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",

@@ -7,7 +7,7 @@ import { useCookie } from 'react-use';
 import { Menu } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
 
-import type { ReactElement, Key } from 'react';
+import type { ReactElement } from 'react';
 
 import { useNavs } from 'hooks/store/admin';
 import { Header } from 'components';
@@ -15,6 +15,8 @@ import { Header } from 'components';
 import type { Theme } from 'types/theme';
 
 import logo from 'assets/images/logo.png';
+
+type Key = 'categories' | 'navigation';
 
 export default function Admin(): ReactElement {
   const navigate = useNavigate();
@@ -105,7 +107,7 @@ export default function Admin(): ReactElement {
           {!collapsed && <h2 css={{ fontSize: '18px', margin: 0 }}>START PAGE</h2>}
         </motion.div>
         <Menu
-          items={navs.map((nav) => ({ ...nav, icon: icons[nav.key] }))}
+          items={navs.map((nav) => ({ ...nav, icon: icons[nav.key as Key] }))}
           defaultSelectedKeys={['categories']}
           mode="inline"
           inlineCollapsed={collapsed}

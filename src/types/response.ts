@@ -20,8 +20,13 @@ export interface UserInfo {
   username: string;
 }
 
+export type CategoryResponse = {
+  data: Category[];
+  total: number;
+};
+
 export interface CategorySites extends Category {
   sites: Site[];
 }
 
-export type ApiResponse = Category[] | Site[];
+export type ApiResponse = CategoryResponse | Category[] | Site[];

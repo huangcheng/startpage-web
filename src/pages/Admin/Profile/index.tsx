@@ -111,16 +111,15 @@ export default function Profile(): ReactElement {
         <Item required name="email" label={t('EMAIL')} rules={[{ required: true, type: 'email' }]}>
           <Input />
         </Item>
-        <Item label={t('AVATAR')}>
+        <Item label={t('AVATAR')} name="avatar">
           <Upload
             multiple={false}
             withCredentials={true}
-            name="image"
             accept="image/*"
             listType="picture-card"
             className="avatar-uploader"
             showUploadList={false}
-            action={`${API_URI}/user/${user?.username ?? ''}/avatar`}
+            action={`${API_URI}/upload`}
             method="POST"
             onChange={handleChange}
             headers={{

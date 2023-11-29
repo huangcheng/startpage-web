@@ -7,6 +7,14 @@ module.exports = {
     historyApiFallback: true,
     open: false,
     port: 8081,
+    proxy: {
+      '/api': 'http://localhost:8000',
+      '/upload': 'http://localhost:8000',
+      headers: {
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+        'Access-Control-Allow-Origin': '*',
+      },
+    },
     static: ['./dist'],
   },
   devtool: 'inline-source-map',

@@ -4,19 +4,18 @@ import type { FC, ReactElement } from 'react';
 
 import { Site } from 'components';
 
-import folder from 'assets/images/icons/folder.png';
-
 import type { Theme } from 'types/theme';
 import type { Site as SiteType } from 'types/response';
 
 export interface CategoryProps {
-  id?: string;
+  icon: string;
+  id: string;
   sites: SiteType[];
   title: string;
 }
 
 const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<CategoryProps> => {
-  const { id, sites, title } = props;
+  const { id, sites, title, icon } = props;
 
   const theme = useTheme() as Theme;
 
@@ -39,7 +38,7 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
           color: ${textColor};
         `}
       >
-        <img src={folder} alt={title} />
+        <img src={icon} alt={title} />
         <span
           css={css`
             margin-left: 8px;

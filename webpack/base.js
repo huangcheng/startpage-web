@@ -38,6 +38,7 @@ module.exports = {
       template: resolve(rootDir, 'public', 'index.ejs'),
       templateParameters: {
         favicon_uri: '/static/images/',
+        title: 'StartPage',
       },
     }),
     new CopyPlugin({

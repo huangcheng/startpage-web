@@ -16,7 +16,7 @@ import type { Theme } from 'types/theme';
 
 import logo from 'assets/images/logo.png';
 
-type Key = 'categories' | 'navigation';
+type Key = 'category' | 'site';
 
 export default function Admin(): ReactElement {
   const navigate = useNavigate();
@@ -31,8 +31,8 @@ export default function Admin(): ReactElement {
 
   const icons = useMemo<Record<Key, ReactElement>>(
     () => ({
-      categories: <FileTextOutlined style={{ color: theme.navIconColor }} />,
-      navigation: <FileTextOutlined style={{ color: theme.navIconColor }} />,
+      category: <FileTextOutlined style={{ color: theme.navIconColor }} />,
+      site: <FileTextOutlined style={{ color: theme.navIconColor }} />,
     }),
     [theme],
   );
@@ -46,11 +46,11 @@ export default function Admin(): ReactElement {
   useEffect(() => {
     setNavs([
       {
-        key: 'categories',
+        key: 'category',
         label: t('CATEGORIES') ?? '',
       },
       {
-        key: 'navigation',
+        key: 'site',
         label: t('NAVIGATION_ITEMS') ?? '',
       },
     ]);
@@ -91,6 +91,9 @@ export default function Admin(): ReactElement {
           padding: '20px 16px',
           width: collapsed ? 112 : 240,
         }}
+        animate={{
+          width: collapsed ? 112 : 240,
+        }}
       >
         <motion.div
           layout
@@ -104,13 +107,19 @@ export default function Admin(): ReactElement {
           }}
         >
           <img css={{ height: 36, width: 36 }} src={logo} alt="logo" />
-          {!collapsed && <h2 css={{ fontSize: '18px', margin: 0 }}>START PAGE</h2>}
+          <motion.h2
+            css={{ fontSize: '18px', margin: 0 }}
+            animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : '100%' }}
+          >
+            START PAGE
+          </motion.h2>
         </motion.div>
         <Menu
           items={navs.map((nav) => ({ ...nav, icon: icons[nav.key as Key] }))}
           defaultSelectedKeys={['categories']}
           mode="inline"
           inlineCollapsed={collapsed}
+          onSelect={({ key }) => navigate(`/admin/${key}`)}
         />
       </motion.div>
       <div

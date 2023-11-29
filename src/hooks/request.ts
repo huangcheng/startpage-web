@@ -10,10 +10,10 @@ import type { AxiosError } from 'axios';
 
 import { useDispatch } from 'hooks/store';
 import { setUser } from 'reducers/user';
-import { fetchCategory, fetchSitesByCategory, login, fetchUser, logout, modifyUser } from 'apis';
+import { fetchCategory, fetchSitesByCategory, login, fetchUser, logout, modifyUser, createCategory } from 'apis';
 
 import type { Category, Site, CategorySites, UserInfo } from 'types/response';
-import type { User } from 'types/request';
+import type { User, Category as CategoryRequest } from 'types/request';
 
 export function useFetchCategoryQuery(): UseQueryResult<Category[]> {
   return useQuery<Category[], Error>(['fetchCategory'], async (): Promise<Category[]> => {
@@ -141,3 +141,24 @@ export function useModifyUserMutation(): UseMutationResult<void, Error, UserInfo
     },
   );
 }
+
+export const useCreateCategoryMutation = (): UseMutationResult<void, Error, CategoryRequest> => {
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, CategoryRequest>(
+    ['createCategory'],
+    async (category: CategoryRequest): Promise<void> => {
+      const result$ = createCategory(category);
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onError: () => {
+        void message.error(t('CREATE_CATEGORY_FAILURE'));
+      },
+      onSuccess: () => {
+        void message.success(t('CREATE_CATEGORY_SUCCESS'));
+      },
+    },
+  );
+};

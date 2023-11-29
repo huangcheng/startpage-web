@@ -45,8 +45,9 @@ export default function Home(): ReactElement {
           }}
           items={categorySites
             .filter(({ sites }) => sites.length > 0)
-            .map(({ id, name, description }) => ({
+            .map(({ icon, id, name, description }) => ({
               description,
+              icon,
               id,
               name,
             }))}
@@ -85,8 +86,10 @@ export default function Home(): ReactElement {
               `}
             >
               {categorySites
-                .map(({ name, description, sites }: CategorySites): ReactElement | undefined =>
-                  sites.length > 0 ? <Category key={name} id={name} sites={sites} title={description} /> : undefined,
+                .map(({ icon, name, description, sites }: CategorySites): ReactElement | undefined =>
+                  sites.length > 0 ? (
+                    <Category key={name} icon={icon} id={name} sites={sites} title={description} />
+                  ) : undefined,
                 )
                 .filter(Boolean)}
             </div>

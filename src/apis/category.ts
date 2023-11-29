@@ -6,6 +6,7 @@ import type { AxiosResponse } from 'axios';
 import { request } from 'utils';
 
 import type { Category, CategoryResponse } from 'types/response';
+import type { Category as CategoryRequest } from 'types/request';
 
 export const fetchCategory = (): Observable<Category[]> =>
   from<Promise<Category[]>>(
@@ -15,3 +16,6 @@ export const fetchCategory = (): Observable<Category[]> =>
         (response: AxiosResponse<CategoryResponse>): Category[] => (response as unknown as CategoryResponse).data,
       ),
   );
+
+export const createCategory = (category: CategoryRequest): Observable<void> =>
+  from<Promise<void>>(request.post('/category', category));

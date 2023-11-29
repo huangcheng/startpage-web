@@ -1,4 +1,3 @@
-const rxjs = require('rxjs');
 const { resolve } = require('node:path');
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');

@@ -20,10 +20,12 @@ import {
   createCategory,
   deleteCategory,
   updateCategory,
+  modifyPassword,
 } from 'apis';
 
 import type { Category, Site, CategorySites, UserInfo, CategoryResponse } from 'types/response';
-import type { User, CreateCategory, UpdateCategory, Pagination } from 'types/request';
+import type { User, CreateCategory, UpdateCategory, Pagination, Password } from 'types/request';
+import Cookie from 'js-cookie';
 
 export function useFetchCategoryQuery(pagination: Pagination, search?: string): UseQueryResult<CategoryResponse> {
   const page = pagination?.page ?? 0;
@@ -225,6 +227,44 @@ export const useUpdateCategoryMutation = (): UseMutationResult<void, Error, Upda
       },
       onSuccess: () => {
         void message.success(t('MODIFY_CATEGORY_SUCCESS'));
+      },
+    },
+  );
+};
+
+export type ModifyPasswordParams = {
+  password: Omit<Password, 'new_password_confirmation'>;
+  user: string;
+};
+export const useModifyPasswordMutation = (): UseMutationResult<void, Error, ModifyPasswordParams> => {
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, ModifyPasswordParams>(
+    ['modifyPassword'],
+    async ({ user, password }: ModifyPasswordParams): Promise<void> => {
+      const result$ = modifyPassword(user, password);
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onError: (error) => {
+        const { response } = error as AxiosError;
+        const { status } = response ?? {};
+
+        let message_ = t('MODIFY_PASSWORD_FAILURE');
+
+        if (status === 400) {
+          message_ = t('PASSWORD_IS_INCORRECT');
+        }
+
+        void message.error(message_);
+      },
+      onSuccess: () => {
+        void message.success(t('MODIFY_PASSWORD_SUCCESS')).then(() => {
+          Cookie.remove('token');
+
+          window.location.href = '/login';
+        });
       },
     },
   );

@@ -16,7 +16,7 @@ import type { Theme } from 'types/theme';
 
 import logo from 'assets/images/logo.png';
 
-type Key = 'category' | 'site';
+type Key = '' | 'site';
 
 export default function Admin(): ReactElement {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export default function Admin(): ReactElement {
 
   const icons = useMemo<Record<Key, ReactElement>>(
     () => ({
-      category: <FileTextOutlined style={{ color: theme.navIconColor }} />,
+      '': <FileTextOutlined style={{ color: theme.navIconColor }} />,
       site: <FileTextOutlined style={{ color: theme.navIconColor }} />,
     }),
     [theme],
@@ -46,7 +46,7 @@ export default function Admin(): ReactElement {
   useEffect(() => {
     setNavs([
       {
-        key: 'category',
+        key: '',
         label: t('CATEGORIES') ?? '',
       },
       {
@@ -116,10 +116,10 @@ export default function Admin(): ReactElement {
         </motion.div>
         <Menu
           items={navs.map((nav) => ({ ...nav, icon: icons[nav.key as Key] }))}
-          defaultSelectedKeys={['categories']}
+          defaultSelectedKeys={['']}
           mode="inline"
           inlineCollapsed={collapsed}
-          onSelect={({ key }) => navigate(`/admin/${key}`)}
+          onSelect={({ key }) => navigate(key ? `/admin/${key}` : '/admin')}
         />
       </motion.div>
       <div

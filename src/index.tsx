@@ -13,7 +13,7 @@ import { ComponentPreviews, useInitial } from './dev';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
     },
   },
 });

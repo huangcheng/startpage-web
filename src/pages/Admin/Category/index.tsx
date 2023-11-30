@@ -219,6 +219,7 @@ export default function Category(): ReactElement {
                 name="name"
                 label={t('NAME')}
                 rules={isUpdate ? [] : [{ message: t('PLEASE_ENTER_NAME'), required: true }]}
+                hasFeedback={!isUpdate}
               >
                 <Input placeholder={t('PLEASE_INPUT')} />
               </Form.Item>
@@ -231,6 +232,7 @@ export default function Category(): ReactElement {
                 name="description"
                 label={t('DESCRIPTION')}
                 rules={isUpdate ? [] : [{ message: t('PLEASE_ENTER_DESCRIPTION'), required: true }]}
+                hasFeedback={!isUpdate}
               >
                 <Input placeholder={t('PLEASE_INPUT')} />
               </Form.Item>
@@ -243,6 +245,7 @@ export default function Category(): ReactElement {
                 name="icon"
                 label={t('ICON')}
                 rules={isUpdate ? [] : [{ message: t('PLEASE_UPLOAD_ICON'), required: true }]}
+                hasFeedback={!isUpdate}
               >
                 <Upload
                   fileList={fileList}

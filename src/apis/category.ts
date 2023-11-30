@@ -1,4 +1,6 @@
 import { from } from 'rxjs';
+import omitBy from 'lodash-es/omitBy';
+import isEmpty from 'lodash-es/isEmpty';
 
 import type { Observable } from 'rxjs';
 import type { AxiosResponse } from 'axios';
@@ -29,18 +31,5 @@ export const createCategory = (category: CreateCategory): Observable<void> =>
 
 export const deleteCategory = (id: number): Observable<void> => from<Promise<void>>(request.delete(`/category/${id}`));
 
-export const updateCategory = (id: number, category: Omit<UpdateCategory, 'id'>): Observable<void> => {
-  if (category.icon === undefined || category.icon.length === 0) {
-    delete category.icon;
-  }
-
-  if (category.description === undefined || category.description.length === 0) {
-    delete category.description;
-  }
-
-  if (category.name === undefined || category.name.length === 0) {
-    delete category.name;
-  }
-
-  return from<Promise<void>>(request.put(`/category/${id}`, category));
-};
+export const updateCategory = (id: number, category: Omit<UpdateCategory, 'id'>): Observable<void> =>
+  from<Promise<void>>(request.put(`/category/${id}`, omitBy(category, isEmpty)));

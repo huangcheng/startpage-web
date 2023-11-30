@@ -18,9 +18,16 @@ const routes: RouteObject[] = [
         path: 'profile',
       },
       {
+        element: load('Admin/Password'),
+        path: 'password',
+      },
+      {
         element: load('Admin/Category'),
         index: true,
-        path: 'category',
+      },
+      {
+        element: load('Admin/Site'),
+        path: 'site',
       },
     ],
     element: load('Admin'),

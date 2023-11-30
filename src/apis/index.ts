@@ -2,4 +2,4 @@ export { fetchCategory, createCategory, deleteCategory, updateCategory } from '.
 
 export { fetchSitesByCategory } from './site';
 
-export { login, fetchUser, logout, modifyUser } from './user';
+export { login, fetchUser, logout, modifyUser, modifyPassword } from './user';

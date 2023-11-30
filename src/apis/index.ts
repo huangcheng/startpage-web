@@ -1,4 +1,4 @@
-export { fetchCategory, createCategory } from './category';
+export { fetchCategory, createCategory, deleteCategory, updateCategory } from './category';
 
 export { fetchSitesByCategory } from './site';
 

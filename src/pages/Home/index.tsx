@@ -16,9 +16,9 @@ export default function Home(): ReactElement {
   const theme = useTheme() as Theme;
   const { containerBackgroundColor } = theme;
 
-  const { data } = useFetchCategoryQuery();
+  const { data } = useFetchCategoryQuery({ page: 0, size: 1000 });
 
-  const categories = useMemo<CategoryType[]>(() => data ?? [], [data]);
+  const categories = useMemo<CategoryType[]>(() => data?.data ?? [], [data]);
 
   const { data: categorySites = [] } = useFetchCategorySitesQuery(categories);
 

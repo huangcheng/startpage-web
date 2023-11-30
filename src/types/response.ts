@@ -1,14 +1,14 @@
 export interface Category {
   description: string;
   icon: string;
-  id: string;
+  id: number;
   name: string;
 }
 
 export interface Site {
   description: string;
   icon: string;
-  id: string;
+  id: number;
   name: string;
   url: string;
 }

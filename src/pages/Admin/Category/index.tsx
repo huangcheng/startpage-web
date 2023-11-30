@@ -1,23 +1,39 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTheme } from '@emotion/react';
 import { motion } from 'framer-motion';
-import { Button, Flex, Input, Table, Drawer, Space, Form, Row, Col, Upload, UploadProps } from 'antd';
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Flex, Input, Table, Drawer, Space, Form, Row, Col, Upload, Divider, Popconfirm } from 'antd';
+import { PlusOutlined, UploadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useCookie } from 'react-use';
 
 import type { ReactElement } from 'react';
+import type { UploadProps } from 'antd';
 
-import { useCreateCategoryMutation } from 'hooks/request';
+import {
+  useCreateCategoryMutation,
+  useFetchCategoryQuery,
+  useDeleteCategoryMutation,
+  useUpdateCategoryMutation,
+} from 'hooks/request';
 
-import type { Category } from 'types/request';
+import type { Pagination, UpdateCategory } from 'types/request';
+import type { Category } from 'types/response';
+import type { Theme } from 'types/theme';
 
 const { Search } = Input;
 
 export default function Category(): ReactElement {
   const { t } = useTranslation();
 
+  const theme = useTheme() as Theme;
+
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [id, setId] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<Pagination>({ page: 0, size: 10 });
+  const [search, setSearch] = useState<string>('');
+  const [fileList, setFileList] = useState<UploadProps['fileList']>([]);
 
   const [token] = useCookie('token');
 
@@ -26,8 +42,22 @@ export default function Category(): ReactElement {
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
   const createCategoryMutation = useCreateCategoryMutation();
+  const deleteCategoryMutation = useDeleteCategoryMutation();
+  const updateCategoryMutation = useUpdateCategoryMutation();
+
+  const { data, isLoading, refetch } = useFetchCategoryQuery(pagination, search);
+
+  useEffect(() => {
+    if (createCategoryMutation.isSuccess || deleteCategoryMutation.isSuccess || updateCategoryMutation.isSuccess) {
+      void refetch();
+    }
+  }, [createCategoryMutation.isSuccess, deleteCategoryMutation.isSuccess, updateCategoryMutation.isSuccess, refetch]);
 
   const handleChange: UploadProps['onChange'] = (info) => {
+    let fileList = [...info.fileList];
+
+    fileList = fileList.slice(-1);
+
     if (info.file.status === 'uploading') {
       setUploading(true);
     }
@@ -37,6 +67,17 @@ export default function Category(): ReactElement {
 
       setUploading(false);
     }
+
+    fileList = fileList.map((file) => {
+      if (file.response) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+        file.url = file.response.url;
+      }
+
+      return file;
+    });
+
+    setFileList(fileList);
   };
 
   useEffect(() => {
@@ -48,12 +89,15 @@ export default function Category(): ReactElement {
       {
         dataIndex: 'icon',
         key: 'icon',
+        render: (icon: string) => <img src={icon} alt="icon" width={24} height={24} />,
         title: t('ICON'),
+        width: '5%',
       },
       {
         dataIndex: 'name',
         key: 'name',
         title: t('NAME'),
+        width: '30%',
       },
       {
         dataIndex: 'description',
@@ -62,10 +106,42 @@ export default function Category(): ReactElement {
       },
       {
         key: 'operation',
+        render: ({ id, name, description, icon }: Category) => (
+          <Flex gap={10} css={{ color: theme.navIconColor }}>
+            <EditOutlined
+              onClick={() => {
+                setIsUpdate(true);
+                setId(id);
+                setImageUrl(icon);
+
+                form.setFieldsValue({
+                  description,
+                  icon,
+                  name,
+                });
+
+                setOpen(true);
+              }}
+            />
+            <Divider type="vertical" />
+            <Popconfirm
+              placement="top"
+              title={t('ARE_YOU_SURE_TO_DELETE')}
+              okText={t('OK')}
+              cancelText={t('CANCEL')}
+              onConfirm={() => {
+                void deleteCategoryMutation.mutate(id);
+              }}
+            >
+              <DeleteOutlined />
+            </Popconfirm>
+          </Flex>
+        ),
         title: t('OPERATION'),
+        width: '5%',
       },
     ],
-    [t],
+    [deleteCategoryMutation, t, theme.navIconColor, setIsUpdate, setId, setOpen, form, setImageUrl],
   );
 
   return (
@@ -75,19 +151,40 @@ export default function Category(): ReactElement {
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => {
+            setIsUpdate(false);
+            form.resetFields();
+
             setOpen(true);
           }}
         >
           {t('CREATE_CATEGORY')}
         </Button>
-        <Search allowClear placeholder={t('PLEASE_ENTER_NAME')} style={{ width: 590 }} />
+        <Search
+          allowClear
+          placeholder={t('PLEASE_ENTER_NAME')}
+          style={{ width: 590 }}
+          onSearch={(value: string) => setSearch(value)}
+        />
       </Flex>
       <motion.div css={{ marginTop: 20 }}>
-        <Table columns={columns} />
+        <Table<Category>
+          rowKey="id"
+          columns={columns}
+          dataSource={data?.data ?? []}
+          loading={isLoading}
+          pagination={{
+            current: (pagination.page ?? 0) + 1,
+            onChange: (page, size) => {
+              setPagination({ page: page - 1, size });
+            },
+            pageSize: pagination.size,
+            total: data?.total ?? 0,
+          }}
+        />
       </motion.div>
       <Drawer
         open={open}
-        title={t('CREATE_CATEGORY')}
+        title={t(`${isUpdate ? 'MODIFY' : 'CREATE'}_CATEGORY`)}
         extra={
           <Space>
             <Button>{t('CANCEL')}</Button>
@@ -97,7 +194,11 @@ export default function Category(): ReactElement {
                 void form
                   .validateFields()
                   .then((values) => {
-                    createCategoryMutation.mutate(values as Category);
+                    if (isUpdate) {
+                      void updateCategoryMutation.mutate({ id, ...values } as UpdateCategory);
+                    } else {
+                      createCategoryMutation.mutate(values as Category);
+                    }
                   })
                   .catch(() => {});
               }}
@@ -114,10 +215,10 @@ export default function Category(): ReactElement {
           <Row gutter={20}>
             <Col span={24}>
               <Form.Item
-                required
+                required={!isUpdate}
                 name="name"
                 label={t('NAME')}
-                rules={[{ message: t('PLEASE_ENTER_NAME'), required: true }]}
+                rules={isUpdate ? [] : [{ message: t('PLEASE_ENTER_NAME'), required: true }]}
               >
                 <Input placeholder={t('PLEASE_INPUT')} />
               </Form.Item>
@@ -126,10 +227,10 @@ export default function Category(): ReactElement {
           <Row gutter={20}>
             <Col span={24}>
               <Form.Item
-                required
+                required={!isUpdate}
                 name="description"
                 label={t('DESCRIPTION')}
-                rules={[{ message: t('PLEASE_ENTER_DESCRIPTION'), required: true }]}
+                rules={isUpdate ? [] : [{ message: t('PLEASE_ENTER_DESCRIPTION'), required: true }]}
               >
                 <Input placeholder={t('PLEASE_INPUT')} />
               </Form.Item>
@@ -138,12 +239,13 @@ export default function Category(): ReactElement {
           <Row gutter={20}>
             <Col span={24}>
               <Form.Item
-                required
+                required={!isUpdate}
                 name="icon"
                 label={t('ICON')}
-                rules={[{ message: t('PLEASE_UPLOAD_ICON'), required: true }]}
+                rules={isUpdate ? [] : [{ message: t('PLEASE_UPLOAD_ICON'), required: true }]}
               >
                 <Upload
+                  fileList={fileList}
                   listType="picture"
                   multiple={false}
                   withCredentials={true}

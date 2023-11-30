@@ -1,13 +1,17 @@
 import type { Translations } from './';
 
 const cn: Translations = {
+  ARE_YOU_SURE_TO_DELETE: '确定要删除吗？',
   AVATAR: '头像',
   CANCEL: '取消',
   CATEGORIES: '分类',
   CATEGORY: '分类',
+  CATEGORY_ALREADY_EXISTS: '分类已存在',
   CREATE_CATEGORY: '创建分类',
   CREATE_CATEGORY_FAILURE: '创建分类失败',
   CREATE_CATEGORY_SUCCESS: '创建分类成功',
+  DELETE_CATEGORY_FAILURE: '删除分类失败',
+  DELETE_CATEGORY_SUCCESS: '删除分类成功',
   DESCRIPTION: '描述',
   EMAIL: '邮箱',
   ICON: '图标',
@@ -15,10 +19,14 @@ const cn: Translations = {
   LOGIN_SUCCESS: '登录成功',
   LOGOUT: '退出登录',
   LOGOUT_SUCCESS: '退出成功',
+  MODIFY_CATEGORY: '修改分类',
+  MODIFY_CATEGORY_FAILURE: '修改分类失败',
+  MODIFY_CATEGORY_SUCCESS: '修改分类成功',
   NAME: '名称',
   NAVIGATION_ITEM: '导航项目',
   NAVIGATION_ITEMS: '导航项目',
   NICKNAME: '昵称',
+  NO: '否',
   OK: '确定',
   OPERATION: '操作',
   PASSWORD: '密码',
@@ -36,6 +44,7 @@ const cn: Translations = {
   UPLOAD_FILE: '上传文件',
   USERNAME_OR_PASSWORD_IS_INCORRECT: '用户名或密码错误',
   WELCOME_TO_LOGIN: '欢迎登录',
+  YES: '是',
 };
 
 export default cn;

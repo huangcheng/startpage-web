@@ -1,13 +1,17 @@
 import type { Translations } from './';
 
 const en: Translations = {
+  ARE_YOU_SURE_TO_DELETE: 'Are You Sure To Delete?',
   AVATAR: 'Avatar',
   CANCEL: 'Cancel',
   CATEGORIES: 'Categories',
   CATEGORY: 'Category',
+  CATEGORY_ALREADY_EXISTS: 'Category Already Exists',
   CREATE_CATEGORY: 'Create Category',
   CREATE_CATEGORY_FAILURE: 'Create Category Failure',
   CREATE_CATEGORY_SUCCESS: 'Create Category Success',
+  DELETE_CATEGORY_FAILURE: 'Delete Category Failure',
+  DELETE_CATEGORY_SUCCESS: 'Delete Category Success',
   DESCRIPTION: 'Description',
   EMAIL: 'Email',
   ICON: 'Icon',
@@ -15,10 +19,14 @@ const en: Translations = {
   LOGIN_SUCCESS: 'Login Success',
   LOGOUT: 'Logout',
   LOGOUT_SUCCESS: 'Logout Success',
+  MODIFY_CATEGORY: 'Modify Category',
+  MODIFY_CATEGORY_FAILURE: 'Modify Category Failure',
+  MODIFY_CATEGORY_SUCCESS: 'Modify Category Success',
   NAME: 'Name',
   NAVIGATION_ITEM: 'Navigation Item',
   NAVIGATION_ITEMS: 'Navigation Items',
   NICKNAME: 'Nickname',
+  NO: 'No',
   OK: 'OK',
   OPERATION: 'Operation',
   PASSWORD: 'Password',
@@ -36,6 +44,7 @@ const en: Translations = {
   UPLOAD_FILE: 'Upload File',
   USERNAME_OR_PASSWORD_IS_INCORRECT: 'Username or Password is Incorrect',
   WELCOME_TO_LOGIN: 'Welcome to Login',
+  YES: 'Yes',
 };
 
 export default en;

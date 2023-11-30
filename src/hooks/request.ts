@@ -10,17 +10,33 @@ import type { AxiosError } from 'axios';
 
 import { useDispatch } from 'hooks/store';
 import { setUser } from 'reducers/user';
-import { fetchCategory, fetchSitesByCategory, login, fetchUser, logout, modifyUser, createCategory } from 'apis';
+import {
+  fetchCategory,
+  fetchSitesByCategory,
+  login,
+  fetchUser,
+  logout,
+  modifyUser,
+  createCategory,
+  deleteCategory,
+  updateCategory,
+} from 'apis';
 
-import type { Category, Site, CategorySites, UserInfo } from 'types/response';
-import type { User, Category as CategoryRequest } from 'types/request';
+import type { Category, Site, CategorySites, UserInfo, CategoryResponse } from 'types/response';
+import type { User, CreateCategory, UpdateCategory, Pagination } from 'types/request';
 
-export function useFetchCategoryQuery(): UseQueryResult<Category[]> {
-  return useQuery<Category[], Error>(['fetchCategory'], async (): Promise<Category[]> => {
-    const result$: Observable<Category[]> = fetchCategory();
+export function useFetchCategoryQuery(pagination: Pagination, search?: string): UseQueryResult<CategoryResponse> {
+  const page = pagination?.page ?? 0;
+  const size = pagination?.size ?? 10;
 
-    return await lastValueFrom<Category[]>(result$);
-  });
+  return useQuery<CategoryResponse, Error>(
+    ['fetchCategory', page, size, search],
+    async (): Promise<CategoryResponse> => {
+      const result$: Observable<CategoryResponse> = fetchCategory(page, size, search);
+
+      return await lastValueFrom<CategoryResponse>(result$);
+    },
+  );
 }
 
 export function useFetchCategorySitesQuery(categories: Category[]): UseQueryResult<CategorySites[]> {
@@ -142,22 +158,73 @@ export function useModifyUserMutation(): UseMutationResult<void, Error, UserInfo
   );
 }
 
-export const useCreateCategoryMutation = (): UseMutationResult<void, Error, CategoryRequest> => {
+export const useCreateCategoryMutation = (): UseMutationResult<void, Error, CreateCategory> => {
   const { t } = useTranslation();
 
-  return useMutation<void, Error, CategoryRequest>(
+  return useMutation<void, Error, CreateCategory>(
     ['createCategory'],
-    async (category: CategoryRequest): Promise<void> => {
+    async (category: CreateCategory): Promise<void> => {
       const result$ = createCategory(category);
 
       return await lastValueFrom<void>(result$);
     },
     {
-      onError: () => {
-        void message.error(t('CREATE_CATEGORY_FAILURE'));
+      onError: (error) => {
+        const { response } = error as AxiosError;
+        const { status } = response ?? {};
+
+        let message_ = t('CREATE_CATEGORY_FAILURE');
+
+        if (status === 409) {
+          message_ = t('CATEGORY_ALREADY_EXISTS');
+        }
+
+        void message.error(message_);
       },
       onSuccess: () => {
         void message.success(t('CREATE_CATEGORY_SUCCESS'));
+      },
+    },
+  );
+};
+
+export const useDeleteCategoryMutation = (): UseMutationResult<void, Error, number> => {
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, number>(
+    ['deleteCategory'],
+    async (id: number): Promise<void> => {
+      const result$ = deleteCategory(id);
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onError: () => {
+        void message.error(t('DELETE_CATEGORY_FAILURE'));
+      },
+      onSuccess: () => {
+        void message.success(t('DELETE_CATEGORY_SUCCESS'));
+      },
+    },
+  );
+};
+
+export const useUpdateCategoryMutation = (): UseMutationResult<void, Error, UpdateCategory> => {
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, UpdateCategory>(
+    ['updateCategory'],
+    async ({ id, ...rest }): Promise<void> => {
+      const result$ = updateCategory(id, { ...rest });
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onError: () => {
+        void message.error(t('MODIFY_CATEGORY_FAILURE'));
+      },
+      onSuccess: () => {
+        void message.success(t('MODIFY_CATEGORY_SUCCESS'));
       },
     },
   );

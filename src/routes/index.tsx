@@ -23,7 +23,7 @@ const routes: RouteObject[] = [
       },
       {
         element: load('Admin/Category'),
-        index: true,
+        path: 'category',
       },
       {
         element: load('Admin/Site'),

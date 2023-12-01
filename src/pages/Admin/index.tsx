@@ -3,6 +3,7 @@ import { useTheme, Global } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Outlet, useNavigate } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { useCookie } from 'react-use';
 import { Menu } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
@@ -16,7 +17,7 @@ import type { Theme } from 'types/theme';
 
 import logo from 'assets/images/logo.png';
 
-type Key = '' | 'site';
+type Key = 'category' | 'site';
 
 export default function Admin(): ReactElement {
   const navigate = useNavigate();
@@ -27,11 +28,15 @@ export default function Admin(): ReactElement {
 
   const [navs, setNavs] = useNavs();
 
+  const location = useLocation();
+
+  const activeNav = useMemo<string>(() => location.pathname.split('/').pop() ?? 'category', [location]);
+
   const [token] = useCookie('token');
 
   const icons = useMemo<Record<Key, ReactElement>>(
     () => ({
-      '': <FileTextOutlined style={{ color: theme.navIconColor }} />,
+      category: <FileTextOutlined style={{ color: theme.navIconColor }} />,
       site: <FileTextOutlined style={{ color: theme.navIconColor }} />,
     }),
     [theme],
@@ -46,7 +51,7 @@ export default function Admin(): ReactElement {
   useEffect(() => {
     setNavs([
       {
-        key: '',
+        key: 'category',
         label: t('CATEGORIES') ?? '',
       },
       {
@@ -116,9 +121,9 @@ export default function Admin(): ReactElement {
         </motion.div>
         <Menu
           items={navs.map((nav) => ({ ...nav, icon: icons[nav.key as Key] }))}
-          defaultSelectedKeys={['']}
           mode="inline"
           inlineCollapsed={collapsed}
+          defaultSelectedKeys={[activeNav]}
           onSelect={({ key }) => navigate(key ? `/admin/${key}` : '/admin')}
         />
       </motion.div>

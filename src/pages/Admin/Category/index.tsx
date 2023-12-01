@@ -11,7 +11,7 @@ import type { UploadProps } from 'antd';
 
 import {
   useCreateCategoryMutation,
-  useFetchCategoryQuery,
+  useFetchCategoriesQuery,
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
 } from 'hooks/request';
@@ -39,13 +39,11 @@ export default function Category(): ReactElement {
 
   const [form] = Form.useForm();
 
-  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
-
   const createCategoryMutation = useCreateCategoryMutation();
   const deleteCategoryMutation = useDeleteCategoryMutation();
   const updateCategoryMutation = useUpdateCategoryMutation();
 
-  const { data, isLoading, refetch } = useFetchCategoryQuery(pagination, search);
+  const { data, isLoading, refetch } = useFetchCategoriesQuery(pagination, search);
 
   useEffect(() => {
     if (createCategoryMutation.isSuccess || deleteCategoryMutation.isSuccess || updateCategoryMutation.isSuccess) {
@@ -63,7 +61,7 @@ export default function Category(): ReactElement {
     }
 
     if (info.file.status === 'done') {
-      setImageUrl(info.file.response as string);
+      form.setFieldValue('icon', info.file.response as string);
 
       setUploading(false);
     }
@@ -79,10 +77,6 @@ export default function Category(): ReactElement {
 
     setFileList(fileList);
   };
-
-  useEffect(() => {
-    form.setFieldValue('icon', imageUrl);
-  }, [imageUrl, form]);
 
   const columns = useMemo(
     () => [
@@ -112,7 +106,7 @@ export default function Category(): ReactElement {
               onClick={() => {
                 setIsUpdate(true);
                 setId(id);
-                setImageUrl(icon);
+                setFileList([]);
 
                 form.setFieldsValue({
                   description,
@@ -141,7 +135,7 @@ export default function Category(): ReactElement {
         width: '5%',
       },
     ],
-    [deleteCategoryMutation, t, theme.navIconColor, setIsUpdate, setId, setOpen, form, setImageUrl],
+    [deleteCategoryMutation, t, theme.navIconColor, setIsUpdate, setId, setOpen, form, setFileList],
   );
 
   return (
@@ -153,6 +147,7 @@ export default function Category(): ReactElement {
           onClick={() => {
             setIsUpdate(false);
             form.resetFields();
+            setFileList([]);
 
             setOpen(true);
           }}

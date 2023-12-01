@@ -1,3 +1,4 @@
+import Cookie from 'js-cookie';
 import { useQuery, useMutation } from 'react-query';
 import { lastValueFrom, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,7 +12,7 @@ import type { AxiosError } from 'axios';
 import { useDispatch } from 'hooks/store';
 import { setUser } from 'reducers/user';
 import {
-  fetchCategory,
+  fetchCategories,
   fetchSitesByCategory,
   login,
   fetchUser,
@@ -21,20 +22,23 @@ import {
   deleteCategory,
   updateCategory,
   modifyPassword,
+  createSite,
+  deleteSite,
+  updateSite,
+  fetchSites,
 } from 'apis';
 
-import type { Category, Site, CategorySites, UserInfo, CategoryResponse } from 'types/response';
-import type { User, CreateCategory, UpdateCategory, Pagination, Password } from 'types/request';
-import Cookie from 'js-cookie';
+import type { Category, Site, CategorySites, UserInfo, CategoryResponse, SiteResponse } from 'types/response';
+import type { User, CreateCategory, UpdateCategory, Pagination, Password, CreateSite, UpdateSite } from 'types/request';
 
-export function useFetchCategoryQuery(pagination: Pagination, search?: string): UseQueryResult<CategoryResponse> {
+export function useFetchCategoriesQuery(pagination: Pagination, search?: string): UseQueryResult<CategoryResponse> {
   const page = pagination?.page ?? 0;
   const size = pagination?.size ?? 10;
 
   return useQuery<CategoryResponse, Error>(
     ['fetchCategory', page, size, search],
     async (): Promise<CategoryResponse> => {
-      const result$: Observable<CategoryResponse> = fetchCategory(page, size, search);
+      const result$: Observable<CategoryResponse> = fetchCategories(page, size, search);
 
       return await lastValueFrom<CategoryResponse>(result$);
     },
@@ -73,7 +77,7 @@ export function useLoginMutation(): UseMutationResult<void, Error, User> {
 
         let message_ = error.message;
 
-        if (status === 401 || status === 404) {
+        if (status === 400) {
           message_ = t('USERNAME_OR_PASSWORD_IS_INCORRECT');
         }
 
@@ -265,6 +269,80 @@ export const useModifyPasswordMutation = (): UseMutationResult<void, Error, Modi
 
           window.location.href = '/login';
         });
+      },
+    },
+  );
+};
+
+export function useFetchSitesQuery(pagination: Pagination, search?: string): UseQueryResult<SiteResponse> {
+  const page = pagination?.page ?? 0;
+  const size = pagination?.size ?? 10;
+
+  return useQuery<SiteResponse, Error>(['fetchCategory', page, size, search], async (): Promise<SiteResponse> => {
+    const result$: Observable<SiteResponse> = fetchSites(page, size, search);
+
+    return await lastValueFrom<SiteResponse>(result$);
+  });
+}
+
+export const useCreateSiteMutation = (): UseMutationResult<void, Error, CreateSite> => {
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, CreateSite>(
+    ['createSite'],
+    async (site: CreateSite): Promise<void> => {
+      const result$ = createSite(site);
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onError: () => {
+        void message.error(t('CREATE_SITE_FAILURE'));
+      },
+      onSuccess: () => {
+        void message.success(t('CREATE_SITE_SUCCESS'));
+      },
+    },
+  );
+};
+
+export const useDeleteSiteMutation = (): UseMutationResult<void, Error, number> => {
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, number>(
+    ['deleteSite'],
+    async (id: number): Promise<void> => {
+      const result$ = deleteSite(id);
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onError: () => {
+        void message.error(t('DELETE_SITE_FAILURE'));
+      },
+      onSuccess: () => {
+        void message.success(t('DELETE_SITE_SUCCESS'));
+      },
+    },
+  );
+};
+
+export const useUpdateSiteMutation = (): UseMutationResult<void, Error, UpdateSite> => {
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, UpdateSite>(
+    ['updateSite'],
+    async (site: UpdateSite): Promise<void> => {
+      const result$ = updateSite(site.id, site);
+
+      return await lastValueFrom<void>(result$);
+    },
+    {
+      onError: () => {
+        void message.error(t('MODIFY_SITE_FAILURE'));
+      },
+      onSuccess: () => {
+        void message.success(t('MODIFY_SITE_SUCCESS'));
       },
     },
   );

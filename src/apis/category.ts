@@ -10,7 +10,7 @@ import { request } from 'utils';
 import type { CategoryResponse } from 'types/response';
 import type { CreateCategory, UpdateCategory } from 'types/request';
 
-export const fetchCategory = (page: number, size: number, search?: string): Observable<CategoryResponse> => {
+export const fetchCategories = (page: number, size: number, search?: string): Observable<CategoryResponse> => {
   let query = `/categories?page=${page}&size=${size}`;
 
   if (search && search.length > 0) {

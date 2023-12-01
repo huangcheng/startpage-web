@@ -1,4 +1,4 @@
-import type { Category } from './response';
+import type { Category, Site } from './response';
 
 export type Pagination = {
   page?: number;
@@ -16,6 +16,10 @@ export type Password = {
   password: string;
 };
 
-export type CreateCategory = Pick<Category, 'name' | 'description' | 'icon'>;
+export type CreateCategory = Omit<Category, 'id'>;
 
 export type UpdateCategory = Pick<Category, 'id'> & Partial<CreateCategory>;
+
+export type CreateSite = Omit<Site, 'id' | 'category'> & { category: number };
+
+export type UpdateSite = Pick<Site, 'id'> & Partial<CreateSite>;

@@ -6,6 +6,7 @@ export interface Category {
 }
 
 export interface Site {
+  category: string;
   description: string;
   icon: string;
   id: number;
@@ -31,3 +32,12 @@ export interface CategorySites extends Category {
 }
 
 export type ApiResponse = CategoryResponse | Category[] | Site[];
+
+export interface SiteWithCategory extends Site {
+  category: string;
+}
+
+export type SiteResponse = {
+  data: SiteWithCategory[];
+  total: number;
+};

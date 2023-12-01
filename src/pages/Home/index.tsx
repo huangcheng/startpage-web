@@ -5,7 +5,7 @@ import type { ReactElement } from 'react';
 
 import { MainContent, Side } from 'layouts';
 import { Category, Logo, Nav, Search, Header } from 'components';
-import { useFetchCategoryQuery, useFetchCategorySitesQuery } from 'hooks/request';
+import { useFetchCategoriesQuery, useFetchCategorySitesQuery } from 'hooks/request';
 
 import type { Category as CategoryType, CategorySites } from 'types/response';
 import type { Theme } from 'types/theme';
@@ -16,7 +16,7 @@ export default function Home(): ReactElement {
   const theme = useTheme() as Theme;
   const { containerBackgroundColor } = theme;
 
-  const { data } = useFetchCategoryQuery({ page: 0, size: 1000 });
+  const { data } = useFetchCategoriesQuery({ page: 0, size: 1000 });
 
   const categories = useMemo<CategoryType[]>(() => data?.data ?? [], [data]);
 
@@ -42,6 +42,7 @@ export default function Home(): ReactElement {
         <Nav
           style={{
             marginTop: 10,
+            paddingLeft: 10,
           }}
           items={categorySites
             .filter(({ sites }) => sites.length > 0)

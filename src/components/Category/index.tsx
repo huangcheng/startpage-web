@@ -38,7 +38,7 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
           color: ${textColor};
         `}
       >
-        <img src={icon} alt={title} />
+        <img src={icon} alt={title} width={20} height={20} />
         <span
           css={css`
             margin-left: 8px;

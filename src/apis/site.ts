@@ -9,8 +9,15 @@ import { request } from 'utils';
 import type { Site, SiteResponse } from 'types/response';
 import type { CreateSite, UpdateSite } from 'types/request';
 
-export const fetchSitesByCategory = (id: number): Observable<Site[]> =>
-  from<Promise<Site[]>>(request.get(`/category/${id}/sites`));
+export const fetchSitesByCategory = (id: number, search?: string): Observable<Site[]> => {
+  let query = `/category/${id}/sites`;
+
+  if (search) {
+    query += `?search=${search}`;
+  }
+
+  return from<Promise<Site[]>>(request.get(query));
+};
 
 export const fetchSites = (page: number, size: number, search?: string): Observable<SiteResponse> => {
   let query: string = `page=${page}&size=${size}`;

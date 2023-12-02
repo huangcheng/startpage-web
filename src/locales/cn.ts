@@ -49,6 +49,7 @@ const cn: Translations = {
   PERSONAL_SETTINGS: '个人设置',
   PLEASE_CONFIRM_YOUR_NEW_PASSWORD: '请确认新密码',
   PLEASE_ENTER_DESCRIPTION: '请输入描述',
+  PLEASE_ENTER_KEYWORDS_TO_SEARCH: '请输入关键字搜索',
   PLEASE_ENTER_NAME: '请输入名称',
   PLEASE_ENTER_URL: '请输入 URL',
   PLEASE_ENTER_YOUR_NEW_PASSWORD: '请输入新密码',

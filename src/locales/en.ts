@@ -49,6 +49,7 @@ const en: Translations = {
   PERSONAL_SETTINGS: 'Personal Settings',
   PLEASE_CONFIRM_YOUR_NEW_PASSWORD: 'Please Confirm Your New Password',
   PLEASE_ENTER_DESCRIPTION: 'Please Enter Description',
+  PLEASE_ENTER_KEYWORDS_TO_SEARCH: 'Please Enter Keywords To Search',
   PLEASE_ENTER_NAME: 'Please Enter Name',
   PLEASE_ENTER_URL: 'Please Enter URL',
   PLEASE_ENTER_YOUR_NEW_PASSWORD: 'Please Enter Your New Password',

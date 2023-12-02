@@ -1,5 +1,6 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { useTranslation } from 'react-i18next';
 
 import type { ReactElement } from 'react';
 
@@ -16,13 +17,17 @@ export default function Home(): ReactElement {
   const theme = useTheme() as Theme;
   const { containerBackgroundColor } = theme;
 
+  const { t } = useTranslation();
+
   const { data } = useFetchCategoriesQuery({ page: 0, size: 1000 });
 
   const categories = useMemo<CategoryType[]>(() => data?.data ?? [], [data]);
 
-  const { data: categorySites = [] } = useFetchCategorySitesQuery(categories);
+  const [search, setSearch] = useState('');
 
   const ref = useRef<HTMLElement | null>(null);
+
+  const { data: categorySites = [] } = useFetchCategorySitesQuery(categories, search);
 
   return (
     <div
@@ -73,12 +78,17 @@ export default function Home(): ReactElement {
           >
             <div
               css={css`
+                align-items: center;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
               `}
             >
-              <Search />
+              <Search
+                placeholder={t('PLEASE_ENTER_KEYWORDS_TO_SEARCH')}
+                onSearch={(value) => {
+                  setSearch(value);
+                }}
+              />
             </div>
             <div
               css={css`

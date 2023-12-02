@@ -45,11 +45,13 @@ export function useFetchCategoriesQuery(pagination: Pagination, search?: string)
   );
 }
 
-export function useFetchCategorySitesQuery(categories: Category[]): UseQueryResult<CategorySites[]> {
+export function useFetchCategorySitesQuery(categories: Category[], search?: string): UseQueryResult<CategorySites[]> {
   return useQuery<CategorySites[], Error>(
-    ['fetchSitesByCategory', categories.map(({ id }) => id)],
+    ['fetchSitesByCategory', search, categories.map(({ id }) => id)],
     async (): Promise<CategorySites[]> => {
-      const result$: Observable<CategorySites[]> = forkJoin(categories.map(({ id }) => fetchSitesByCategory(id))).pipe(
+      const result$: Observable<CategorySites[]> = forkJoin(
+        categories.map(({ id }) => fetchSitesByCategory(id, search)),
+      ).pipe(
         map<Site[][], CategorySites[]>((sites) =>
           categories.map((category, index) => ({ ...category, sites: sites[index] })),
         ),

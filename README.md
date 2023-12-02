@@ -45,7 +45,7 @@ Or
 pnpm install
 ```
 
-3. Copy the `.env.example` file to `.env` and make sure the `API_URL` is correct, if you were encountered `CORS`, consider use Nginx to proxy the request.
+3. Copy the `.env.example` file to `.env` and make sure the `API_URL` is correct, if you were encountered `CORS`, consider using Nginx to proxy the request.
 
 4. Build the project:
 ```bash

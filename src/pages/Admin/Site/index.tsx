@@ -1,7 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { motion } from 'framer-motion';
-import { Button, Flex, Input, Table, Drawer, Space, Form, Row, Col, Upload, Divider, Popconfirm, Select } from 'antd';
+import {
+  Button,
+  Flex,
+  Input,
+  Table,
+  Drawer,
+  Space,
+  Form,
+  Row,
+  Col,
+  Upload,
+  Divider,
+  Popconfirm,
+  Select,
+  message,
+} from 'antd';
 import { PlusOutlined, UploadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useCookie } from 'react-use';
@@ -55,19 +70,44 @@ export default function Site(): ReactElement {
     }
   }, [createSiteMutation.isSuccess, deleteSiteMutation.isSuccess, updateSiteMutation.isSuccess, refetch]);
 
+  useEffect(() => {
+    if (createSiteMutation.isSuccess || updateSiteMutation.isSuccess) {
+      setOpen(false);
+    }
+  }, [createSiteMutation.isSuccess, updateSiteMutation.isSuccess, setOpen]);
+
   const handleChange: UploadProps['onChange'] = (info) => {
     let fileList = [...info.fileList];
 
     fileList = fileList.slice(-1);
 
-    if (info.file.status === 'uploading') {
-      setUploading(true);
-    }
+    switch (info.file.status) {
+      case 'uploading': {
+        setUploading(true);
 
-    if (info.file.status === 'done') {
-      form.setFieldValue('icon', info.file.response as string);
+        break;
+      }
+      case 'done': {
+        form.setFieldValue('icon', info.file.response as string);
 
-      setUploading(false);
+        setUploading(false);
+
+        break;
+      }
+      case 'error': {
+        setUploading(false);
+
+        let messageText = t('UPLOAD_FAILED');
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (info.file.error?.status === 413) {
+          messageText = t('FILE_IS_TOO_LARGE');
+        }
+
+        void message.error(messageText);
+
+        break;
+      }
     }
 
     fileList = fileList.map((file) => {
@@ -200,7 +240,13 @@ export default function Site(): ReactElement {
         title={t(`${isUpdate ? 'MODIFY' : 'CREATE'}_SITE`)}
         extra={
           <Space>
-            <Button>{t('CANCEL')}</Button>
+            <Button
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              {t('CANCEL')}
+            </Button>
             <Button
               type="primary"
               onClick={() => {
@@ -228,11 +274,11 @@ export default function Site(): ReactElement {
           <Row gutter={20}>
             <Col span={24}>
               <Form.Item
-                required={!isUpdate}
+                required
                 name="name"
                 label={t('NAME')}
-                rules={isUpdate ? [] : [{ message: t('PLEASE_ENTER_NAME'), required: true }]}
-                hasFeedback={!isUpdate}
+                rules={[{ message: t('PLEASE_ENTER_NAME'), required: true }]}
+                hasFeedback
               >
                 <Input placeholder={t('PLEASE_INPUT')} />
               </Form.Item>
@@ -241,11 +287,11 @@ export default function Site(): ReactElement {
           <Row gutter={20}>
             <Col span={24}>
               <Form.Item
-                required={!isUpdate}
+                required
                 name="description"
                 label={t('DESCRIPTION')}
-                rules={isUpdate ? [] : [{ message: t('PLEASE_ENTER_DESCRIPTION'), required: true }]}
-                hasFeedback={!isUpdate}
+                rules={[{ message: t('PLEASE_ENTER_DESCRIPTION'), required: true }]}
+                hasFeedback
               >
                 <Input placeholder={t('PLEASE_INPUT')} />
               </Form.Item>
@@ -258,7 +304,7 @@ export default function Site(): ReactElement {
                 name="url"
                 label={t('URL')}
                 rules={isUpdate ? [{ type: 'url' }] : [{ message: t('PLEASE_ENTER_URL'), required: true, type: 'url' }]}
-                hasFeedback={!isUpdate}
+                hasFeedback
               >
                 <Input placeholder={t('PLEASE_INPUT')} />
               </Form.Item>
@@ -267,11 +313,11 @@ export default function Site(): ReactElement {
           <Row gutter={20}>
             <Col span={24}>
               <Form.Item
-                required={!isUpdate}
+                required
                 name="category"
                 label={t('CATEGORY')}
-                rules={isUpdate ? [] : [{ message: t('PLEASE_SELECT_CATEGORY'), required: true }]}
-                hasFeedback={!isUpdate}
+                rules={[{ message: t('PLEASE_SELECT_CATEGORY'), required: true }]}
+                hasFeedback
               >
                 <Select placeholder={t('PLEASE_SELECT')}>
                   {categories.map((category) => (
@@ -286,11 +332,11 @@ export default function Site(): ReactElement {
           <Row gutter={20}>
             <Col span={24}>
               <Form.Item
-                required={!isUpdate}
+                required
                 name="icon"
                 label={t('ICON')}
-                rules={isUpdate ? [] : [{ message: t('PLEASE_UPLOAD_ICON'), required: true }]}
-                hasFeedback={!isUpdate}
+                rules={[{ message: t('PLEASE_UPLOAD_ICON'), required: true }]}
+                hasFeedback
               >
                 <Upload
                   fileList={fileList}

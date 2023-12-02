@@ -4,6 +4,7 @@ import { lastValueFrom, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { message } from 'antd';
 import { useTranslation } from 'react-i18next';
+import omit from 'lodash-es/omit';
 
 import type { Observable } from 'rxjs';
 import type { UseQueryResult, UseMutationResult } from 'react-query';
@@ -130,14 +131,14 @@ export function useLogoutMutation(): UseMutationResult<void, Error, void> {
   );
 }
 
-export function useModifyUserMutation(): UseMutationResult<void, Error, UserInfo> {
+export function useModifyUserMutation(): UseMutationResult<void, Error, UserInfo & { user: string }> {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  return useMutation<void, Error, UserInfo>(
+  return useMutation<void, Error, UserInfo & { user: string }>(
     ['modifyUser'],
-    async (user: UserInfo): Promise<void> => {
-      const result$: Observable<void> = modifyUser(user);
+    async (user: UserInfo & { user: string }): Promise<void> => {
+      const result$: Observable<void> = modifyUser(user.user, omit(user, ['user']));
 
       return await lastValueFrom<void>(result$);
     },

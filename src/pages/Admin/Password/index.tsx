@@ -95,7 +95,7 @@ export default function Password(): ReactElement {
           required
           hasFeedback
           name="new_password"
-          label={t('PASSWORD')}
+          label={t('NEW_PASSWORD')}
           rules={[{ message: t('PLEASE_ENTER_YOUR_NEW_PASSWORD').toString(), required: true }]}
         >
           <Input type="password" />
@@ -104,7 +104,7 @@ export default function Password(): ReactElement {
           required
           hasFeedback
           name="new_password_confirmation"
-          label={t('PASSWORD')}
+          label={t('NEW_PASSWORD_CONFIRMATION')}
           rules={[
             { message: t('PLEASE_CONFIRM_YOUR_NEW_PASSWORD').toString(), required: true },
             // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

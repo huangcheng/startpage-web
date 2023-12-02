@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { css, useTheme, Global } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
-import { Form, Input, Upload, Space, Button } from 'antd';
+import { Form, Input, Upload, Space, Button, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useCookie } from 'react-use';
 import { useNavigate } from 'react-router';
@@ -15,8 +15,6 @@ import { useUser } from 'hooks/store/user';
 import { useModifyUserMutation } from 'hooks/request';
 
 import type { UserInfo } from 'types/response';
-
-type UserFormData = Omit<UserInfo, 'roles'>;
 
 const { Item, useForm } = Form;
 
@@ -35,14 +33,33 @@ export default function Profile(): ReactElement {
   const { mutate, isLoading } = useModifyUserMutation();
 
   const handleChange: UploadProps['onChange'] = (info) => {
-    if (info.file.status === 'uploading') {
-      setUploading(true);
-    }
+    switch (info.file.status) {
+      case 'uploading': {
+        setUploading(true);
 
-    if (info.file.status === 'done') {
-      setImageUrl(info.file.response as string);
+        break;
+      }
+      case 'done': {
+        setImageUrl(info.file.response as string);
 
-      setUploading(false);
+        setUploading(false);
+
+        break;
+      }
+      case 'error': {
+        setUploading(false);
+
+        let messageText = t('UPLOAD_FAILED');
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (info.file.error?.status === 413) {
+          messageText = t('FILE_IS_TOO_LARGE');
+        }
+
+        void message.error(messageText);
+
+        break;
+      }
     }
   };
 
@@ -85,28 +102,23 @@ export default function Profile(): ReactElement {
       >
         {t('PERSONAL_INFORMATION')}
       </h2>
-      <Form<UserFormData>
+      <Form<UserInfo>
         form={form}
         layout="vertical"
-        initialValues={omit<UserInfo>(user, ['password', 'roles']) as unknown as UserFormData}
+        initialValues={omit<UserInfo>(user, ['password']) as unknown as UserInfo}
         onFinish={(values): void =>
           mutate({
-            ...(values as UserInfo),
+            ...values,
             avatar: imageUrl ?? user?.avatar ?? '',
-            username: user?.username ?? '',
+            user: user?.username ?? '',
           })
         }
       >
-        <Item required name="nickname" label={t('NICKNAME')} rules={[{ required: true }]}>
+        <Item required name="username" label={t('USERNAME')} rules={[{ required: true }]}>
           <Input />
         </Item>
-        <Item
-          required
-          name="password"
-          label={t('PASSWORD')}
-          rules={[{ message: t('PLEASE_ENTER_YOUR_PASSWORD').toString(), required: true }]}
-        >
-          <Input type="password" />
+        <Item required name="nickname" label={t('NICKNAME')} rules={[{ required: true }]}>
+          <Input />
         </Item>
         <Item required name="email" label={t('EMAIL')} rules={[{ required: true, type: 'email' }]}>
           <Input />

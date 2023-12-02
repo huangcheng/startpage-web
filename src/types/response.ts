@@ -18,7 +18,6 @@ export interface UserInfo {
   avatar: string;
   email: string;
   nickname: string;
-  roles: string[];
   username: string;
 }
 

@@ -1,5 +1,4 @@
 import { from } from 'rxjs';
-import omit from 'lodash-es/omit';
 
 import type { Observable } from 'rxjs';
 
@@ -14,8 +13,8 @@ export const fetchUser = (): Observable<UserInfo> => from<Promise<UserInfo>>(req
 
 export const logout = (): Observable<void> => from<Promise<void>>(request.post('/auth/logout'));
 
-export const modifyUser = (user: Omit<UserInfo, 'roles'>): Observable<void> =>
-  from<Promise<void>>(request.put(`/user/${user.username}`, omit(user, 'username')));
+export const modifyUser = (username: string, user: UserInfo): Observable<void> =>
+  from<Promise<void>>(request.put(`/user/${username}`, user));
 
 export const modifyPassword = (user: string, password: Omit<Password, 'new_password_confirmation'>): Observable<void> =>
   from<Promise<void>>(request.put(`/user/${user}/password`, password));

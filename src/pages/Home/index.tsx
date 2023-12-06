@@ -97,9 +97,9 @@ export default function Home(): ReactElement {
               `}
             >
               {categorySites
-                .map(({ icon, name, description, sites }: CategorySites): ReactElement | undefined =>
+                .map(({ icon, name, sites }: CategorySites): ReactElement | undefined =>
                   sites.length > 0 ? (
-                    <Category key={name} icon={icon} id={name} sites={sites} title={description} />
+                    <Category key={name} icon={icon} id={name} sites={sites} title={name} />
                   ) : undefined,
                 )
                 .filter(Boolean)}

@@ -23,3 +23,8 @@ export type UpdateCategory = Pick<Category, 'id'> & Partial<CreateCategory>;
 export type CreateSite = Omit<Site, 'id' | 'category'> & { category: number };
 
 export type UpdateSite = Pick<Site, 'id'> & Partial<CreateSite>;
+
+export type SortCategories = {
+  active: number;
+  over?: number;
+};

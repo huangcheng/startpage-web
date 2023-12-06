@@ -1,24 +1,34 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, Children, cloneElement } from 'react';
 import { useTheme } from '@emotion/react';
 import { motion } from 'framer-motion';
 import { Button, Flex, Input, Table, Drawer, Space, Form, Row, Col, Upload, Divider, Popconfirm, message } from 'antd';
-import { PlusOutlined, UploadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined, EditOutlined, DeleteOutlined, MenuOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useCookie } from 'react-use';
+import { DndContext } from '@dnd-kit/core';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-import type { ReactElement } from 'react';
+import type { ReactElement, HTMLAttributes, CSSProperties } from 'react';
 import type { UploadProps } from 'antd';
+import type { DragEndEvent } from '@dnd-kit/core';
 
 import {
   useCreateCategoryMutation,
   useFetchCategoriesQuery,
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
+  useSortCategoriesMutation,
 } from 'hooks/request';
 
-import type { Pagination, UpdateCategory } from 'types/request';
+import type { UpdateCategory } from 'types/request';
 import type { Category } from 'types/response';
 import type { Theme } from 'types/theme';
+
+interface RowProps extends HTMLAttributes<HTMLTableRowElement> {
+  'data-row-key': string;
+}
 
 const { Search } = Input;
 
@@ -31,7 +41,6 @@ export default function Category(): ReactElement {
   const [id, setId] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
-  const [pagination, setPagination] = useState<Pagination>({ page: 0, size: 10 });
   const [search, setSearch] = useState<string>('');
   const [fileList, setFileList] = useState<UploadProps['fileList']>([]);
 
@@ -42,14 +51,26 @@ export default function Category(): ReactElement {
   const createCategoryMutation = useCreateCategoryMutation();
   const deleteCategoryMutation = useDeleteCategoryMutation();
   const updateCategoryMutation = useUpdateCategoryMutation();
+  const sortCategoriesMutation = useSortCategoriesMutation();
 
-  const { data, isLoading, refetch } = useFetchCategoriesQuery(pagination, search);
+  const { data, isLoading, refetch } = useFetchCategoriesQuery({ page: 0, size: 10_000 }, search);
 
   useEffect(() => {
-    if (createCategoryMutation.isSuccess || deleteCategoryMutation.isSuccess || updateCategoryMutation.isSuccess) {
+    if (
+      createCategoryMutation.isSuccess ||
+      deleteCategoryMutation.isSuccess ||
+      updateCategoryMutation.isSuccess ||
+      sortCategoriesMutation.isSuccess
+    ) {
       void refetch();
     }
-  }, [createCategoryMutation.isSuccess, deleteCategoryMutation.isSuccess, updateCategoryMutation.isSuccess, refetch]);
+  }, [
+    createCategoryMutation.isSuccess,
+    deleteCategoryMutation.isSuccess,
+    updateCategoryMutation.isSuccess,
+    sortCategoriesMutation.isSuccess,
+    refetch,
+  ]);
 
   useEffect(() => {
     if (createCategoryMutation.isSuccess || updateCategoryMutation.isSuccess) {
@@ -101,6 +122,39 @@ export default function Category(): ReactElement {
     });
 
     setFileList(fileList);
+  };
+
+  const RowElement = ({ children, ...props }: RowProps): ReactElement => {
+    const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
+      id: props['data-row-key'],
+    });
+
+    const style: CSSProperties = {
+      ...props.style,
+      transform: CSS.Transform.toString(transform),
+      transition,
+      ...(isDragging ? { position: 'relative', zIndex: 9999 } : {}),
+    };
+
+    return (
+      <tr {...props} ref={setNodeRef} style={style} {...attributes}>
+        {Children.map(children, (child) => {
+          if ((child as ReactElement).key === 'sort') {
+            return cloneElement(child as ReactElement, {
+              children: (
+                <MenuOutlined
+                  ref={setActivatorNodeRef}
+                  style={{ cursor: 'move', touchAction: 'none' }}
+                  {...listeners}
+                />
+              ),
+            });
+          }
+
+          return child;
+        })}
+      </tr>
+    );
   };
 
   const columns = useMemo(
@@ -159,9 +213,22 @@ export default function Category(): ReactElement {
         title: t('OPERATION'),
         width: '5%',
       },
+      {
+        key: 'sort',
+        width: '5%',
+      },
     ],
     [deleteCategoryMutation, t, theme.navIconColor, setIsUpdate, setId, setOpen, form, setFileList],
   );
+
+  const onDragEnd = ({ active, over }: DragEndEvent): void => {
+    if (active.id !== over?.id) {
+      sortCategoriesMutation.mutate({
+        active: active.id as number,
+        over: over?.id as number,
+      });
+    }
+  };
 
   return (
     <motion.div>
@@ -186,21 +253,23 @@ export default function Category(): ReactElement {
           onSearch={(value: string) => setSearch(value)}
         />
       </Flex>
-      <motion.div css={{ marginTop: 20 }}>
-        <Table<Category>
-          rowKey="id"
-          columns={columns}
-          dataSource={data?.data ?? []}
-          loading={isLoading}
-          pagination={{
-            current: (pagination.page ?? 0) + 1,
-            onChange: (page, size) => {
-              setPagination({ page: page - 1, size });
-            },
-            pageSize: pagination.size,
-            total: data?.total ?? 0,
-          }}
-        />
+      <motion.div css={{ marginTop: 20, position: 'relative', zIndex: 1 }}>
+        <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
+          <SortableContext items={data?.data.map(({ id }) => id) ?? []} strategy={verticalListSortingStrategy}>
+            <Table<Category>
+              rowKey="id"
+              columns={columns}
+              components={{
+                body: {
+                  row: RowElement,
+                },
+              }}
+              dataSource={data?.data ?? []}
+              loading={isLoading}
+              pagination={false}
+            />
+          </SortableContext>
+        </DndContext>
       </motion.div>
       <Drawer
         open={open}

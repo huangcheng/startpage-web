@@ -84,7 +84,6 @@ export default function Password(): ReactElement {
       >
         <Item
           required
-          hasFeedback
           name="password"
           label={t('PASSWORD')}
           rules={[{ message: t('PLEASE_ENTER_YOUR_PASSWORD').toString(), required: true }]}
@@ -93,7 +92,6 @@ export default function Password(): ReactElement {
         </Item>
         <Item
           required
-          hasFeedback
           name="new_password"
           label={t('NEW_PASSWORD')}
           rules={[{ message: t('PLEASE_ENTER_YOUR_NEW_PASSWORD').toString(), required: true }]}
@@ -102,7 +100,6 @@ export default function Password(): ReactElement {
         </Item>
         <Item
           required
-          hasFeedback
           name="new_password_confirmation"
           label={t('NEW_PASSWORD_CONFIRMATION')}
           rules={[

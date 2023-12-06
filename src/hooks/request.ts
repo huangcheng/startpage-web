@@ -30,7 +30,17 @@ import {
 } from 'apis';
 
 import type { Category, Site, CategorySites, UserInfo, CategoryResponse, SiteResponse } from 'types/response';
-import type { User, CreateCategory, UpdateCategory, Pagination, Password, CreateSite, UpdateSite } from 'types/request';
+import type {
+  User,
+  CreateCategory,
+  UpdateCategory,
+  Pagination,
+  Password,
+  CreateSite,
+  UpdateSite,
+  SortCategories,
+} from 'types/request';
+import { sortCategories } from 'apis/category';
 
 export function useFetchCategoriesQuery(pagination: Pagination, search?: string): UseQueryResult<CategoryResponse> {
   const page = pagination?.page ?? 0;
@@ -349,4 +359,12 @@ export const useUpdateSiteMutation = (): UseMutationResult<void, Error, UpdateSi
       },
     },
   );
+};
+
+export const useSortCategoriesMutation = (): UseMutationResult<void, Error, SortCategories> => {
+  return useMutation<void, Error, SortCategories>(['sortCategories'], async (data: SortCategories): Promise<void> => {
+    const result$ = sortCategories(data);
+
+    return await lastValueFrom<void>(result$);
+  });
 };

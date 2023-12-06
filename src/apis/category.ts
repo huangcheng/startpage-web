@@ -8,7 +8,7 @@ import type { AxiosResponse } from 'axios';
 import { request } from 'utils';
 
 import type { CategoryResponse } from 'types/response';
-import type { CreateCategory, UpdateCategory } from 'types/request';
+import type { CreateCategory, SortCategories, UpdateCategory } from 'types/request';
 
 export const fetchCategories = (page: number, size: number, search?: string): Observable<CategoryResponse> => {
   let query = `/categories?page=${page}&size=${size}`;
@@ -33,3 +33,6 @@ export const deleteCategory = (id: number): Observable<void> => from<Promise<voi
 
 export const updateCategory = (id: number, category: Omit<UpdateCategory, 'id'>): Observable<void> =>
   from<Promise<void>>(request.put(`/category/${id}`, omitBy(category, isEmpty)));
+
+export const sortCategories = (data: SortCategories): Observable<void> =>
+  from<Promise<void>>(request.post('/category/sort', data));

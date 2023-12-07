@@ -29,6 +29,8 @@ export default function Home(): ReactElement {
 
   const { data: categorySites = [] } = useFetchCategorySitesQuery(categories, search);
 
+  const navWidth = 220;
+
   return (
     <div
       css={css`
@@ -42,23 +44,25 @@ export default function Home(): ReactElement {
         style={{
           backgroundColor: containerBackgroundColor,
         }}
+        width={navWidth}
       >
-        <Logo src={logo} />
-        <Nav
-          style={{
-            marginTop: 10,
-            paddingLeft: 10,
-          }}
-          items={categorySites
-            .filter(({ sites }) => sites.length > 0)
-            .map(({ icon, id, name, description }) => ({
-              description,
-              icon,
-              id,
-              name,
-            }))}
-          getContainer={(): HTMLElement | Window => ref.current ?? window}
-        />
+        <div css={{ position: 'relative', width: navWidth }}>
+          <Logo src={logo} />
+          <Nav
+            style={{
+              marginTop: 10,
+            }}
+            items={categorySites
+              .filter(({ sites }) => sites.length > 0)
+              .map(({ icon, id, name, description }) => ({
+                description,
+                icon,
+                id,
+                name,
+              }))}
+            getContainer={(): HTMLElement | Window => ref.current ?? window}
+          />
+        </div>
       </Side>
       <div
         css={css`

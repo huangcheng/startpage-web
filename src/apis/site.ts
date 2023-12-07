@@ -1,6 +1,5 @@
 import { from } from 'rxjs';
-import OmitBy from 'lodash-es/omitBy';
-import isEmpty from 'lodash-es/isEmpty';
+import omit from 'lodash-es/omit';
 
 import type { Observable } from 'rxjs';
 
@@ -32,6 +31,6 @@ export const fetchSites = (page: number, size: number, search?: string): Observa
 export const createSite = (site: CreateSite): Observable<void> => from<Promise<void>>(request.post('/site', site));
 
 export const updateSite = (id: number, site: Omit<UpdateSite, 'id'>): Observable<void> =>
-  from<Promise<void>>(request.put(`/site/${id}`, OmitBy(site, isEmpty)));
+  from<Promise<void>>(request.put(`/site/${id}`, omit(site, ['id'])));
 
 export const deleteSite = (id: number): Observable<void> => from<Promise<void>>(request.delete(`/site/${id}`));

@@ -19,7 +19,7 @@ export default function Home(): ReactElement {
 
   const { t } = useTranslation();
 
-  const { data } = useFetchCategoriesQuery({ page: 0, size: 1000 });
+  const { data } = useFetchCategoriesQuery({ page: 0, size: 10_000 });
 
   const categories = useMemo<CategoryType[]>(() => data?.data ?? [], [data]);
 

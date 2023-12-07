@@ -1,6 +1,6 @@
 import Cookie from 'js-cookie';
 import { useQuery, useMutation } from 'react-query';
-import { lastValueFrom, forkJoin } from 'rxjs';
+import { lastValueFrom, forkJoin, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { message } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +40,7 @@ import type {
   UpdateSite,
   SortCategories,
 } from 'types/request';
-import { sortCategories } from 'apis/category';
+import { sortCategories, sortCategorySites } from 'apis/category';
 
 export function useFetchCategoriesQuery(pagination: Pagination, search?: string): UseQueryResult<CategoryResponse> {
   const page = pagination?.page ?? 0;
@@ -367,4 +367,23 @@ export const useSortCategoriesMutation = (): UseMutationResult<void, Error, Sort
 
     return await lastValueFrom<void>(result$);
   });
+};
+
+export const useFetchSitesByCategoryQuery = (id?: number, search?: string): UseQueryResult<Site[]> => {
+  return useQuery<Site[], Error>(['fetchSitesByCategory', id, search], async (): Promise<Site[]> => {
+    const result$ = id === undefined ? from([]) : fetchSitesByCategory(id, search);
+
+    return await lastValueFrom<Site[]>(result$);
+  });
+};
+
+export const useSortCategorySitesMutation = (): UseMutationResult<void, Error, SortCategories & { id: number }> => {
+  return useMutation<void, Error, SortCategories & { id: number }>(
+    ['sortCategorySites'],
+    async ({ id, ...rest }: SortCategories & { id: number }): Promise<void> => {
+      const result$ = sortCategorySites(id, { ...rest });
+
+      return await lastValueFrom<void>(result$);
+    },
+  );
 };

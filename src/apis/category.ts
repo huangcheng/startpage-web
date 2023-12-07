@@ -36,3 +36,6 @@ export const updateCategory = (id: number, category: Omit<UpdateCategory, 'id'>)
 
 export const sortCategories = (data: SortCategories): Observable<void> =>
   from<Promise<void>>(request.post('/category/sort', data));
+
+export const sortCategorySites = (id: number, data: SortCategories): Observable<void> =>
+  from<Promise<void>>(request.post(`/category/${id}/sites/sort`, data));

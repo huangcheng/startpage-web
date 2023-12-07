@@ -89,11 +89,16 @@ export default function Site(): ReactElement {
 
   const sites = useMemo(() => {
     if (filter) {
-      return categorySites;
+      return categorySites
+        .map((site) => ({
+          ...site,
+          category: categories.find(({ id }) => id === filter)?.name ?? '',
+        }))
+        .filter(({ category }) => category !== '');
     }
 
     return data?.data ?? [];
-  }, [data?.data, categorySites, filter]);
+  }, [data?.data, categorySites, categories, filter]);
 
   useEffect(() => {
     if (createSiteMutation.isSuccess || deleteSiteMutation.isSuccess || updateSiteMutation.isSuccess) {

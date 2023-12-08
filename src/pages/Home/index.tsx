@@ -11,7 +11,7 @@ import { useFetchCategoriesQuery, useFetchCategorySitesQuery } from 'hooks/reque
 import type { Category as CategoryType, CategorySites } from 'types/response';
 import type { Theme } from 'types/theme';
 
-import logo from 'assets/images/logo.png';
+import logo from 'assets/images/logo.svg';
 
 export default function Home(): ReactElement {
   const theme = useTheme() as Theme;

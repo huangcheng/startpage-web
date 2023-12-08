@@ -51,8 +51,7 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
         css={css`
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          column-gap: 0.5rem;
-          row-gap: 0.5rem;
+          gap: 1.5rem;
           align-items: flex-start;
           margin-top: 24px;
         `}

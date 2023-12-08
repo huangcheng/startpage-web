@@ -22,9 +22,7 @@ const Site: FC<SiteProps> = (props: SiteProps): ReactElement<SiteProps> => {
     <a
       css={css`
         display: inline-flex;
-        width: 300px;
-        height: 90px;
-        border-radius: 4px;
+        border-radius: 8px;
         box-sizing: border-box;
         align-items: center;
         justify-content: stretch;

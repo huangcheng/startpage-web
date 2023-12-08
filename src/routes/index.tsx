@@ -4,6 +4,10 @@ import { load } from 'utils/route';
 
 const routes: RouteObject[] = [
   {
+    element: load('NotFound'),
+    path: '*',
+  },
+  {
     element: load('Home'),
     path: '/',
   },

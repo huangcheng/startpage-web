@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { css, useTheme } from '@emotion/react';
 
 import type { FC, ReactElement } from 'react';
@@ -19,7 +20,7 @@ const Site: FC<SiteProps> = (props: SiteProps): ReactElement<SiteProps> => {
   const { textColor, siteBackgroundColor } = theme;
 
   return (
-    <a
+    <motion.a
       css={css`
         display: inline-flex;
         border-radius: 8px;
@@ -33,6 +34,8 @@ const Site: FC<SiteProps> = (props: SiteProps): ReactElement<SiteProps> => {
       href={link}
       target="_blank"
       rel="noreferrer"
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
     >
       <img
         src={icon}
@@ -77,7 +80,7 @@ const Site: FC<SiteProps> = (props: SiteProps): ReactElement<SiteProps> => {
           {description}
         </p>
       </div>
-    </a>
+    </motion.a>
   );
 };
 

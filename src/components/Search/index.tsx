@@ -25,7 +25,7 @@ const Search: FC<SearchProps> = (props: SearchProps): ReactElement<SearchProps> 
         width: 100%;
       `}
     >
-      <AntdSearch style={{ width: '50%' }} {...props} />
+      <AntdSearch style={{ position: 'relative', width: '50%', zIndex: 1 }} {...props} />
       <img
         src={search}
         alt="search"
@@ -35,6 +35,7 @@ const Search: FC<SearchProps> = (props: SearchProps): ReactElement<SearchProps> 
           height: 155px;
           top: 0;
           right: 32px;
+          z-index: 0;
         `}
       />
     </div>

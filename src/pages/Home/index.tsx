@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
+import { BrowserView } from 'react-device-detect';
 
 import type { ReactElement } from 'react';
 
@@ -40,30 +41,33 @@ export default function Home(): ReactElement {
         width: 100vw;
       `}
     >
-      <Side
-        style={{
-          backgroundColor: containerBackgroundColor,
-        }}
-        width={navWidth}
-      >
-        <div css={{ position: 'relative', width: navWidth }}>
-          <Logo src={logo} />
-          <Nav
-            style={{
-              marginTop: 10,
-            }}
-            items={categorySites
-              .filter(({ sites }) => sites.length > 0)
-              .map(({ icon, id, name, description }) => ({
-                description,
-                icon,
-                id,
-                name,
-              }))}
-            getContainer={(): HTMLElement | Window => ref.current ?? window}
-          />
-        </div>
-      </Side>
+      <BrowserView>
+        <Side
+          style={{
+            backgroundColor: containerBackgroundColor,
+            height: '100%',
+          }}
+          width={navWidth}
+        >
+          <div css={{ position: 'relative', width: navWidth }}>
+            <Logo src={logo} />
+            <Nav
+              style={{
+                marginTop: 10,
+              }}
+              items={categorySites
+                .filter(({ sites }) => sites.length > 0)
+                .map(({ icon, id, name, description }) => ({
+                  description,
+                  icon,
+                  id,
+                  name,
+                }))}
+              getContainer={(): HTMLElement | Window => ref.current ?? window}
+            />
+          </div>
+        </Side>
+      </BrowserView>
       <div
         css={css`
           display: flex;

@@ -15,7 +15,8 @@ import { Header } from 'components';
 
 import type { Theme } from 'types/theme';
 
-import logo from 'assets/images/logo.png';
+import logo from 'assets/images/logo.svg';
+import logoPure from 'assets/images/logo.png';
 
 type Key = 'category' | 'site';
 
@@ -111,13 +112,13 @@ export default function Admin(): ReactElement {
             marginBottom: 24,
           }}
         >
-          <img css={{ height: 36, width: 36 }} src={logo} alt="logo" />
-          <motion.h2
-            css={{ fontSize: '18px', margin: 0 }}
-            animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : '100%' }}
-          >
-            START PAGE
-          </motion.h2>
+          <a href="/">
+            <img
+              src={collapsed ? logoPure : logo}
+              style={{ height: collapsed ? 36 : 64, width: collapsed ? 36 : 180 }}
+              alt="logo"
+            />
+          </a>
         </motion.div>
         <Menu
           items={navs.map((nav) => ({ ...nav, icon: icons[nav.key as Key] }))}

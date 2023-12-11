@@ -9,6 +9,7 @@ import { DndContext } from '@dnd-kit/core';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import isString from 'lodash-es/isString';
 
 import type { ReactElement, HTMLAttributes, CSSProperties } from 'react';
 import type { UploadProps } from 'antd';
@@ -22,7 +23,7 @@ import {
   useSortCategoriesMutation,
 } from 'hooks/request';
 
-import type { UpdateCategory } from 'types/request';
+import type { CreateCategory, UpdateCategory } from 'types/request';
 import type { Category } from 'types/response';
 import type { Theme } from 'types/theme';
 
@@ -288,11 +289,22 @@ export default function Category(): ReactElement {
               onClick={() => {
                 void form
                   .validateFields()
-                  .then((values) => {
+                  .then((values: CreateCategory) => {
+                    const data: CreateCategory = { ...values };
+                    for (const key of Object.keys(values)) {
+                      let value = values[key as keyof CreateCategory];
+
+                      if (isString(value)) {
+                        value = value.trim();
+                      }
+
+                      data[key as keyof CreateCategory] = value;
+                    }
+
                     if (isUpdate) {
-                      void updateCategoryMutation.mutate({ id, ...values } as UpdateCategory);
+                      void updateCategoryMutation.mutate({ id, ...data } as UpdateCategory);
                     } else {
-                      createCategoryMutation.mutate(values as Category);
+                      createCategoryMutation.mutate(data);
                     }
                   })
                   .catch(() => {});

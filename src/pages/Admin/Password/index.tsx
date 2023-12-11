@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, Input, Space, Button } from 'antd';
 import { useNavigate } from 'react-router';
 import omit from 'lodash-es/omit';
+import isString from 'lodash-es/isString';
 
 import type { ReactElement } from 'react';
 
@@ -73,6 +74,12 @@ export default function Password(): ReactElement {
         initialValues={omit<UserInfo>(user, ['password', 'roles']) as unknown as UserFormData}
         onFinish={(values): void => {
           if (user !== undefined) {
+            for (const key of Object.keys(values)) {
+              if (isString(values[key as keyof Password])) {
+                values[key as keyof Password] = values[key as keyof Password].trim();
+              }
+            }
+
             mutate({
               password: {
                 ...omit(values, ['new_password_confirmation']),

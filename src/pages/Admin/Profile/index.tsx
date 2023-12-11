@@ -6,6 +6,7 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useCookie } from 'react-use';
 import { useNavigate } from 'react-router';
 import omit from 'lodash-es/omit';
+import isString from 'lodash-es/isString';
 
 import type { ReactElement } from 'react';
 import type { UploadProps } from 'antd';
@@ -106,13 +107,19 @@ export default function Profile(): ReactElement {
         form={form}
         layout="vertical"
         initialValues={omit<UserInfo>(user, ['password']) as unknown as UserInfo}
-        onFinish={(values): void =>
+        onFinish={(values): void => {
+          for (const key of Object.keys(values)) {
+            if (isString(values[key as keyof UserInfo])) {
+              values[key as keyof UserInfo] = values[key as keyof UserInfo].trim();
+            }
+          }
+
           mutate({
             ...values,
             avatar: imageUrl ?? user?.avatar ?? '',
             user: user?.username ?? '',
-          })
-        }
+          });
+        }}
       >
         <Item required name="username" label={t('USERNAME')} rules={[{ required: true }]}>
           <Input />

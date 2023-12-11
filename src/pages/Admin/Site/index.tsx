@@ -33,6 +33,7 @@ import { DndContext } from '@dnd-kit/core';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import isString from 'lodash-es/isString';
 
 import type { UploadProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -362,11 +363,17 @@ export default function Site(): ReactElement {
               onClick={() => {
                 void form
                   .validateFields()
-                  .then((values) => {
+                  .then((values: Record<string, string>) => {
+                    for (const key of Object.keys(values)) {
+                      if (isString(values[key])) {
+                        values[key] = values[key].trim();
+                      }
+                    }
+
                     if (isUpdate) {
                       void updateSiteMutation.mutate({ id, ...values } as UpdateSite);
                     } else {
-                      createSiteMutation.mutate(values as CreateSite);
+                      createSiteMutation.mutate(values as unknown as CreateSite);
                     }
                   })
                   .catch(() => {});

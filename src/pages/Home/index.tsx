@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { css, useTheme } from '@emotion/react';
+import { css, useTheme, Global } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
 import { BrowserView } from 'react-device-detect';
 
@@ -8,6 +8,7 @@ import type { ReactElement } from 'react';
 import { MainContent, Side } from 'layouts';
 import { Category, Logo, Nav, Search, Header } from 'components';
 import { useFetchCategoriesQuery, useFetchCategorySitesQuery } from 'hooks/request';
+import { useIsLogin } from 'hooks/store/user';
 
 import type { Category as CategoryType, CategorySites } from 'types/response';
 import type { Theme } from 'types/theme';
@@ -16,7 +17,7 @@ import logo from 'assets/images/logo.svg';
 
 export default function Home(): ReactElement {
   const theme = useTheme() as Theme;
-  const { containerBackgroundColor } = theme;
+  const { containerBackgroundColor, navActiveColor } = theme;
 
   const { t } = useTranslation();
 
@@ -30,6 +31,8 @@ export default function Home(): ReactElement {
 
   const { data: categorySites = [] } = useFetchCategorySitesQuery(categories, search);
 
+  const isLogin = useIsLogin();
+
   const navWidth = 220;
 
   return (
@@ -41,6 +44,33 @@ export default function Home(): ReactElement {
         width: 100vw;
       `}
     >
+      <Global
+        styles={css`
+          .ant-anchor::before {
+            display: none !important;
+          }
+
+          .ant-anchor .ant-anchor-ink {
+            inset-inline-start: unset !important;
+
+            inset-inline-end: 0 !important;
+
+            background-color: ${navActiveColor} !important;
+          }
+
+          .ant-anchor .ant-anchor-link {
+            padding-block: 6px !important;
+          }
+
+          .ant-anchor-link-active {
+            background-color: rgba(240, 240, 240, 0.27) !important;
+          }
+
+          .ant-anchor .ant-anchor-link-active > .ant-anchor-link-title {
+            color: ${navActiveColor} !important;
+          }
+        `}
+      />
       <BrowserView>
         <Side
           style={{
@@ -76,7 +106,7 @@ export default function Home(): ReactElement {
           height: 100vh;
         `}
       >
-        <Header />
+        {isLogin && <Header />}
         <MainContent ref={ref}>
           <div
             css={css`

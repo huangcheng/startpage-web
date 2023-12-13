@@ -2,7 +2,6 @@
 module.exports = {
   env: {
     browser: true,
-    'cypress/globals': true,
     es2021: true,
     jest: true,
     node: true,
@@ -72,7 +71,7 @@ module.exports = {
     },
   ],
   parser: '@babel/eslint-parser',
-  plugins: ['html', 'import', 'eslint-plugin-tsdoc', 'cypress'],
+  plugins: ['html', 'import', 'eslint-plugin-tsdoc'],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'no-console': 'error',

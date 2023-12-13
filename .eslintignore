@@ -1,2 +1,2 @@
-cypress.config.ts
-dev
+playwright
+playwright.config.ts

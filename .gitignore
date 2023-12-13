@@ -329,4 +329,6 @@ pnpm-lock.yaml
 cypress/videos
 cypress/screenshots
 
+playwright-report
+
 .idea/

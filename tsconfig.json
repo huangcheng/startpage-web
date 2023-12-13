@@ -122,5 +122,5 @@
     "skipLibCheck": true
     /* Skip type checking all .d.ts files. */
   },
-  "include": ["src", "typings", "jest.config.ts", "jest.setup.ts", "src/mock"]
+  "include": ["src", "typings", "playwright", "jest.config.ts", "jest.setup.ts", "playwright.config.ts", "src/mock"],
 }

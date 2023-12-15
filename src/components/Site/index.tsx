@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { css, useTheme } from '@emotion/react';
+import { Tooltip } from 'antd';
 
 import type { FC, ReactElement } from 'react';
 
@@ -9,11 +10,12 @@ export interface SiteProps {
   description: string;
   icon: string;
   link: string;
+  onClick?: () => void;
   title: string;
 }
 
 const Site: FC<SiteProps> = (props: SiteProps): ReactElement<SiteProps> => {
-  const { description, icon, link, title } = props;
+  const { description, icon, link, title, onClick } = props;
 
   const theme = useTheme() as Theme;
 
@@ -36,6 +38,7 @@ const Site: FC<SiteProps> = (props: SiteProps): ReactElement<SiteProps> => {
       rel="noreferrer"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
+      onClick={onClick}
     >
       <img
         src={icon}
@@ -65,20 +68,22 @@ const Site: FC<SiteProps> = (props: SiteProps): ReactElement<SiteProps> => {
         >
           {title}
         </h3>
-        <p
-          css={css`
-            margin: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 28px;
-            color: ${textColor};
-          `}
-        >
-          {description}
-        </p>
+        <Tooltip placement="bottom" title={description}>
+          <p
+            css={css`
+              margin: 0;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-size: 14px;
+              font-weight: 400;
+              line-height: 28px;
+              color: ${textColor};
+            `}
+          >
+            {description}
+          </p>
+        </Tooltip>
       </div>
     </motion.a>
   );

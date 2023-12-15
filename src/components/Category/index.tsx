@@ -10,12 +10,13 @@ import type { Site as SiteType } from 'types/response';
 export interface CategoryProps {
   icon: string;
   id: string;
+  onClick?: (site: number) => void;
   sites: SiteType[];
   title: string;
 }
 
 const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<CategoryProps> => {
-  const { id, sites, title, icon } = props;
+  const { id, sites, title, icon, onClick } = props;
 
   const theme = useTheme() as Theme;
 
@@ -58,7 +59,14 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
       >
         {sites.map(
           ({ id, url, description, name, icon }: SiteType): ReactElement => (
-            <Site key={id} icon={icon} title={name} link={url} description={description} />
+            <Site
+              key={id}
+              icon={icon}
+              title={name}
+              link={url}
+              description={description}
+              onClick={() => onClick?.(id)}
+            />
           ),
         )}
       </div>

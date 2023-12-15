@@ -68,6 +68,7 @@ const en: Translations = {
   URL: 'URL',
   USERNAME: 'Username',
   USERNAME_OR_PASSWORD_IS_INCORRECT: 'Username or Password is Incorrect',
+  VISIT_COUNT: 'Visit Count',
   WELCOME_TO_LOGIN: 'Welcome to Login',
   YES: 'Yes',
 };

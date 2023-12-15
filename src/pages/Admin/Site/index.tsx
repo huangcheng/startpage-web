@@ -230,6 +230,13 @@ export default function Site(): ReactElement {
           filters: categories.map(({ name, id }) => ({ text: name, value: id })),
           key: 'category',
           title: t('CATEGORY'),
+          width: '10%',
+        },
+        {
+          dataIndex: 'visit_count',
+          key: 'visit_count',
+          title: t('VISIT_COUNT'),
+          width: '10%',
         },
         {
           key: 'operation',

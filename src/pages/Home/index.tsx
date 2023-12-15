@@ -137,7 +137,16 @@ export default function Home(): ReactElement {
               {categorySites
                 .map(({ icon, name, sites }: CategorySites): ReactElement | undefined =>
                   sites.length > 0 ? (
-                    <Category key={name} icon={icon} id={name} sites={sites} title={name} />
+                    <Category
+                      key={name}
+                      icon={icon}
+                      id={name}
+                      sites={sites}
+                      title={name}
+                      onClick={(id: number): void => {
+                        navigator.sendBeacon(`/api/site/${id}/visit`);
+                      }}
+                    />
                   ) : undefined,
                 )
                 .filter(Boolean)}

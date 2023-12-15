@@ -12,6 +12,7 @@ export interface Site {
   id: number;
   name: string;
   url: string;
+  visit_count: number;
 }
 
 export interface UserInfo {

@@ -68,6 +68,7 @@ const cn: Translations = {
   URL: '链接',
   USERNAME: '用户名',
   USERNAME_OR_PASSWORD_IS_INCORRECT: '用户名或密码错误',
+  VISIT_COUNT: '访问次数',
   WELCOME_TO_LOGIN: '欢迎登录',
   YES: '是',
 };

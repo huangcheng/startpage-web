@@ -6,25 +6,25 @@ import type { Resource } from 'i18next';
 import cn from './cn';
 import en from './en';
 
-export type Language = 'en-US' | 'zh-CN';
+export type Language = 'en_US' | 'zh_CN';
 
 export type Translations = Record<string, string>;
 
 const locale: Resource = {
-  'en-US': {
+  en_US: {
     translation: en,
   },
-  'zh-CN': {
+  zh_CN: {
     translation: cn,
   },
 };
 
 const instance = i18n.createInstance({
-  fallbackLng: 'zh-CN',
+  fallbackLng: 'zh_CN',
   interpolation: {
     escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
   },
-  lng: 'zh-CN',
+  lng: 'zh_CN',
   resources: locale,
 });
 

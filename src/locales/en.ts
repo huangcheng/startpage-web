@@ -7,6 +7,7 @@ const en: Translations = {
   CATEGORIES: 'Categories',
   CATEGORY: 'Category',
   CATEGORY_ALREADY_EXISTS: 'Category Already Exists',
+  CHANGE_LANGUAGE: 'Change',
   CREATE_CATEGORY: 'Create Category',
   CREATE_CATEGORY_FAILURE: 'Create Category Failure',
   CREATE_CATEGORY_SUCCESS: 'Create Category Success',
@@ -19,6 +20,7 @@ const en: Translations = {
   DELETE_SITE_SUCCESS: 'Delete Site Success',
   DESCRIPTION: 'Description',
   EMAIL: 'Email',
+  EN_US: 'English',
   FILE_IS_TOO_LARGE: 'File Is Too Large',
   ICON: 'Icon',
   INVALID_USERNAME_OR_PASSWORD: 'Invalid Username or Password',
@@ -71,6 +73,7 @@ const en: Translations = {
   VISIT_COUNT: 'Visit Count',
   WELCOME_TO_LOGIN: 'Welcome to Login',
   YES: 'Yes',
+  ZH_CN: 'Simplified Chinese',
 };
 
 export default en;

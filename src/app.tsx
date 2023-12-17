@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { Global, css, ThemeProvider } from '@emotion/react';
 import { I18nextProvider } from 'react-i18next';
 import { ConfigProvider, App as AntdApp } from 'antd';
-import { useCookie } from 'react-use';
+import { useCookie, useLocalStorage } from 'react-use';
 
 import { hot } from 'react-hot-loader/root';
 
@@ -15,6 +15,9 @@ import { useDispatch, useSelector } from 'hooks/store';
 import { useUserInfoMutation } from 'hooks/request';
 import { useUser } from 'hooks/store/user';
 import { setUser } from 'reducers/user';
+import { setLanguage } from 'reducers/global';
+
+import type { Language } from 'locales';
 
 import store from './store';
 import routes from './routes';
@@ -45,11 +48,17 @@ const App = (): JSX.Element => {
   const user = useUser();
   const { mutate, data } = useUserInfoMutation();
 
+  const [_locale] = useLocalStorage('locale', locale as string);
+
   useEffect(() => {
     if (i18n.isInitialized) {
       void i18n.changeLanguage(locale);
     }
   }, [locale]);
+
+  useEffect(() => {
+    dispatch(setLanguage(_locale as Language));
+  }, [_locale, dispatch]);
 
   useEffect(() => {
     if (token !== undefined && (token ?? '').length > 0 && user === undefined) {

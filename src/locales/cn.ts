@@ -7,6 +7,7 @@ const cn: Translations = {
   CATEGORIES: '分类',
   CATEGORY: '分类',
   CATEGORY_ALREADY_EXISTS: '分类已存在',
+  CHANGE_LANGUAGE: '更改',
   CREATE_CATEGORY: '创建分类',
   CREATE_CATEGORY_FAILURE: '创建分类失败',
   CREATE_CATEGORY_SUCCESS: '创建分类成功',
@@ -19,6 +20,7 @@ const cn: Translations = {
   DELETE_SITE_SUCCESS: '删除站点成功',
   DESCRIPTION: '描述',
   EMAIL: '邮箱',
+  EN_US: '英文',
   FILE_IS_TOO_LARGE: '文件过大',
   ICON: '图标',
   INVALID_USERNAME_OR_PASSWORD: '用户名或密码无效',
@@ -71,6 +73,7 @@ const cn: Translations = {
   VISIT_COUNT: '访问次数',
   WELCOME_TO_LOGIN: '欢迎登录',
   YES: '是',
+  ZH_CN: '简体中文',
 };
 
 export default cn;

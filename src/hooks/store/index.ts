@@ -4,7 +4,7 @@ import type { TypedUseSelectorHook } from 'react-redux';
 
 import type { RootState, AppDispatch } from '../../store';
 
-export { useLocale } from './global';
+export { useLocale, useSupportedLocales } from './global';
 
 export const useDispatch = (): AppDispatch => _useDispatch<AppDispatch>();
 export const useSelector: TypedUseSelectorHook<RootState> = _useSelector;

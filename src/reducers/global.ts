@@ -9,12 +9,14 @@ import type { Language } from '../locales';
 export type GlobalState = {
   loading: boolean;
   locale: Language;
+  locales: Language[];
   theme: Themes;
 };
 
 const initialState: GlobalState = {
   loading: true,
-  locale: 'zh-CN',
+  locale: 'zh_CN',
+  locales: ['zh_CN', 'en_US'],
   theme: 'light',
 };
 

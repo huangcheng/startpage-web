@@ -323,7 +323,7 @@ export default function Site(): ReactElement {
       </Flex>
       <motion.div css={{ marginTop: 20, position: 'relative', zIndex: 1 }}>
         <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
-          <SortableContext items={data?.data.map(({ id }) => id) ?? []} strategy={verticalListSortingStrategy}>
+          <SortableContext items={sites.map(({ id }) => id) ?? []} strategy={verticalListSortingStrategy}>
             <Table<SiteWithCategory>
               rowKey="id"
               columns={columns as ColumnsType<SiteWithCategory>}

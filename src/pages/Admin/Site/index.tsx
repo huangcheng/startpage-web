@@ -119,6 +119,12 @@ export default function Site(): ReactElement {
     }
   }, [sortCategorySitesMutation.isSuccess, refreshSites]);
 
+  useEffect(() => {
+    if (filter !== undefined && updateSiteMutation.isSuccess) {
+      void refreshSites();
+    }
+  }, [refreshSites, filter, updateSiteMutation.isSuccess]);
+
   const handleChange: UploadProps['onChange'] = (info) => {
     let fileList = [...info.fileList];
 

@@ -18,10 +18,14 @@ const Nav: FC<NavProps> = (props: NavProps): ReactElement<NavProps> => {
       <Anchor
         affix={false}
         getContainer={getContainer}
-        items={items.map(({ name, description }) => ({
+        items={items.map(({ name, icon }) => ({
           href: `#${name}`,
           key: name,
-          title: description,
+          title: (
+            <div css={{ alignItems: 'center', display: 'flex' }}>
+              <img src={icon} width="14px" height="14px" style={{ marginRight: 6 }} alt={name} /> {name}
+            </div>
+          ),
         }))}
       />
     </div>

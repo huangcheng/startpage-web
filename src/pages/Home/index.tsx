@@ -128,12 +128,15 @@ export default function Home(): ReactElement {
                 `}
               >
                 <a
+                  css={css`
+                    color: ${textColor};
+                  `}
                   target="_blank"
                   href="https://github.com/huangcheng/startpage-web"
                   rel="noreferrer"
                   title="Source Code"
                 >
-                  <GithubOutlined />
+                  <GithubOutlined style={{ fontSize: 20 }} />
                 </a>
               </div>
             </div>

@@ -254,7 +254,15 @@ export default function Category(): ReactElement {
           onSearch={(value: string) => setSearch(value)}
         />
       </Flex>
-      <motion.div css={{ marginTop: 20, position: 'relative', zIndex: 1 }}>
+      <motion.div
+        css={{
+          height: 'calc(100vh - 60px - 40px - 32px -' + ' 40px)',
+          marginTop: 20,
+          overflowY: 'auto',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
           <SortableContext items={data?.data.map(({ id }) => id) ?? []} strategy={verticalListSortingStrategy}>
             <Table<Category>

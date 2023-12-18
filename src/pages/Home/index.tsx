@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { css, useTheme, Global } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
 import { BrowserView } from 'react-device-detect';
+import { GithubOutlined } from '@ant-design/icons';
 
 import type { ReactElement } from 'react';
 
@@ -17,7 +18,7 @@ import logo from 'assets/images/logo.svg';
 
 export default function Home(): ReactElement {
   const theme = useTheme() as Theme;
-  const { containerBackgroundColor, navActiveColor } = theme;
+  const { containerBackgroundColor, navActiveColor, textColor } = theme;
 
   const { t } = useTranslation();
 
@@ -79,10 +80,21 @@ export default function Home(): ReactElement {
           }}
           width={navWidth}
         >
-          <div css={{ position: 'relative', width: navWidth }}>
+          <div
+            css={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              justifyItems: 'stretch',
+              overflowY: 'auto',
+              position: 'relative',
+              width: navWidth,
+            }}
+          >
             <Logo src={logo} />
             <Nav
               style={{
+                flex: 'auto',
                 marginTop: 10,
               }}
               items={categorySites
@@ -95,6 +107,36 @@ export default function Home(): ReactElement {
                 }))}
               getContainer={(): HTMLElement | Window => ref.current ?? window}
             />
+            <div
+              css={css`
+                padding: 16px;
+                font-size: 12px;
+                color: ${textColor};
+              `}
+            >
+              <div>
+                ©2023{' '}
+                <a target="_blank" href="https://github.com/huangcheng" rel="noreferrer">
+                  HUANG Cheng
+                </a>{' '}
+                All rights reserved.
+              </div>
+              <div
+                css={css`
+                  text-align: center;
+                  margin-top: 8px;
+                `}
+              >
+                <a
+                  target="_blank"
+                  href="https://github.com/huangcheng/startpage-web"
+                  rel="noreferrer"
+                  title="Source Code"
+                >
+                  <GithubOutlined />
+                </a>
+              </div>
+            </div>
           </div>
         </Side>
       </BrowserView>

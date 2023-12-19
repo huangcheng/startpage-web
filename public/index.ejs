@@ -12,6 +12,9 @@
     <link rel="icon" type="image/png" sizes="512x512" href="<%= favicon_uri %>android-chrome-512x512.png">
     <link rel="apple-touch-icon" href="<%= favicon_uri %>apple-touch-icon.png">
     <title><%= title %></title>
+    <% if (use_turnstile === true) { %>
+       <script src="<%= turnstile_script_url %>"></script>
+    <% } %>
 </head>
 <body>
 <div id="app"></div>

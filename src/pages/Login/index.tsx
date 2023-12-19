@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Form, Button, Input, Select } from 'antd';
 import { UserOutlined, LockOutlined, TranslationOutlined } from '@ant-design/icons';
@@ -22,15 +23,47 @@ export default function Login(): ReactElement {
 
   const { t } = useTranslation();
 
-  const { isLoading, mutate } = useLoginMutation();
+  const { isLoading, mutate, isError } = useLoginMutation();
 
   const locale = useLocale();
   const supportedLocales = useSupportedLocales();
 
   const dispatch = useDispatch();
 
+  const [disabled, setDisabled] = useState(false);
+
+  const [form] = Form.useForm();
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setValue] = useLocalStorage('locale', locale as string);
+
+  const widget = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (USE_TURNSTILE === true && isError === true && turnstile !== undefined && widget.current !== undefined) {
+      setDisabled(false);
+
+      turnstile.reset(widget.current);
+    }
+  }, [isError, widget]);
+
+  useEffect(() => {
+    if (USE_TURNSTILE === true && turnstile !== undefined) {
+      turnstile.ready(function () {
+        setDisabled(true);
+
+        widget.current = turnstile.render('#cf-turnstile', {
+          callback: (token: string) => {
+            form.setFieldValue('token', token);
+
+            setDisabled(false);
+          },
+          language: locale === 'en_US' ? 'auto' : locale.replace(/_/, '-'),
+          sitekey: TURNSTILE_SITE_KEY,
+        });
+      });
+    }
+  }, [locale, form, setDisabled]);
 
   return (
     <div
@@ -58,7 +91,7 @@ export default function Login(): ReactElement {
         <h2 css={{ fontSize: '28px', lineHeight: '48px', marginBottom: 40, textAlign: 'center' }}>
           {t('WELCOME_TO_LOGIN')}
         </h2>
-        <Form<User> size="large" onFinish={mutate}>
+        <Form<User> form={form} size="large" onFinish={mutate}>
           <Form.Item name="username" rules={[{ message: t('PLEASE_ENTER_YOUR_USERNAME').toString(), required: true }]}>
             <Input autoComplete="off" prefix={<UserOutlined />} />
           </Form.Item>
@@ -69,8 +102,19 @@ export default function Login(): ReactElement {
           >
             <Input.Password prefix={<LockOutlined />} type="password" />
           </Form.Item>
+          {USE_TURNSTILE === true && (
+            <Form.Item name="token">
+              <div id="cf-turnstile" className="cf-turnstile" style={{ textAlign: 'center' }} />
+            </Form.Item>
+          )}
           <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ marginTop: 8, width: '100%' }} loading={isLoading}>
+            <Button
+              disabled={disabled}
+              type="primary"
+              htmlType="submit"
+              style={{ marginTop: 8, width: '100%' }}
+              loading={isLoading}
+            >
               {t('LOGIN')}
             </Button>
           </Form.Item>

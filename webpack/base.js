@@ -39,6 +39,8 @@ module.exports = {
       templateParameters: {
         favicon_uri: '/static/images/',
         title: 'StartPage',
+        turnstile_script_url: process.env.TURNSTILE_SCRIPT_URL,
+        use_turnstile: JSON.parse(process.env.USE_TURNSTILE),
       },
     }),
     new CopyPlugin({
@@ -56,6 +58,8 @@ module.exports = {
       PRODUCTION: JSON.stringify(process.env.NODE_ENV === 'production'),
       PROJECT: JSON.stringify(package_.name),
       SERVICE: JSON.stringify(SERVICE),
+      TURNSTILE_SITE_KEY: JSON.stringify(process.env.TURNSTILE_SITE_KEY),
+      USE_TURNSTILE: JSON.parse(process.env.USE_TURNSTILE),
       VERSION: JSON.stringify(package_.version),
     }),
     new WebpackBar({}),

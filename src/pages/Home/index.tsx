@@ -99,7 +99,8 @@ export default function Home(): ReactElement {
               }}
               items={categorySites
                 .filter(({ sites }) => sites.length > 0)
-                .map(({ icon, id, name, description }) => ({
+                .map(({ icon, id, name, description, children = [] }) => ({
+                  children,
                   description,
                   icon,
                   id,

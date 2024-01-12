@@ -16,7 +16,7 @@ export type Password = {
   password: string;
 };
 
-export type CreateCategory = Omit<Category, 'id'>;
+export type CreateCategory = Omit<Category, 'id' | 'children'>;
 
 export type UpdateCategory = Pick<Category, 'id'> & Partial<CreateCategory>;
 

@@ -1,4 +1,5 @@
 export interface Category {
+  children?: Category[];
   description: string;
   icon: string;
   id: number;

@@ -222,6 +222,28 @@ export default function Category(): ReactElement {
     [deleteCategoryMutation, t, theme.navIconColor, setIsUpdate, setId, setOpen, form, setFileList],
   );
 
+  const expandedRowRender = (record: Category): ReactElement => {
+    const { children = [] } = record;
+
+    return (
+      <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
+        <SortableContext items={children.map(({ id }) => id) ?? []} strategy={verticalListSortingStrategy}>
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={children}
+            pagination={false}
+            components={{
+              body: {
+                row: RowElement,
+              },
+            }}
+          />
+        </SortableContext>
+      </DndContext>
+    );
+  };
+
   const onDragEnd = ({ active, over }: DragEndEvent): void => {
     if (active.id !== over?.id) {
       sortCategoriesMutation.mutate({
@@ -276,6 +298,11 @@ export default function Category(): ReactElement {
               dataSource={data?.data ?? []}
               loading={isLoading}
               pagination={false}
+              expandable={{
+                childrenColumnName: 'other',
+                expandedRowRender,
+                rowExpandable: (record) => Boolean(record.children && record.children.length > 0),
+              }}
             />
           </SortableContext>
         </DndContext>

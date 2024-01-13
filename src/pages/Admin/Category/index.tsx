@@ -227,11 +227,14 @@ export default function Category(): ReactElement {
 
     return (
       <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
-        <SortableContext items={children.map(({ id }) => id) ?? []} strategy={verticalListSortingStrategy}>
+        <SortableContext
+          items={children === null ? [] : children.map(({ id }) => id)}
+          strategy={verticalListSortingStrategy}
+        >
           <Table
             rowKey="id"
             columns={columns}
-            dataSource={children}
+            dataSource={children === null ? [] : children}
             pagination={false}
             components={{
               body: {

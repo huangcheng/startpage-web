@@ -1,22 +1,34 @@
 import { css, useTheme } from '@emotion/react';
+import { useState } from 'react';
 
 import type { FC, ReactElement } from 'react';
 
 import { Site } from 'components';
+import { useFetchSitesByCategoryQuery } from 'hooks/request';
 
 import type { Theme } from 'types/theme';
-import type { Site as SiteType } from 'types/response';
+import type { Category, Site as SiteType } from 'types/response';
 
 export interface CategoryProps {
-  icon: string;
-  id: string;
+  category: Category;
   onClick?: (site: number) => void;
-  sites: SiteType[];
-  title: string;
+  search?: string;
 }
 
 const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<CategoryProps> => {
-  const { id, sites, title, icon, onClick } = props;
+  const { category, search, onClick } = props;
+
+  const { id, icon, name, children = [] } = category;
+
+  const [currentId] = useState(() => {
+    if (children !== null && children.length > 0) {
+      return children[0].id;
+    }
+
+    return id;
+  });
+
+  const { data: sites = [] } = useFetchSitesByCategoryQuery(currentId, search);
 
   const theme = useTheme() as Theme;
 
@@ -24,7 +36,6 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
 
   return (
     <section
-      id={id}
       css={css`
         margin-bottom: 48px;
       `}
@@ -39,13 +50,13 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
           color: ${textColor};
         `}
       >
-        <img src={icon} alt={title} width={20} height={20} />
+        <img src={icon} alt={name} width={20} height={20} />
         <span
           css={css`
             margin-left: 8px;
           `}
         >
-          {title}
+          {name}
         </span>
       </title>
       <div

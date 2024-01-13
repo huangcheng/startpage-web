@@ -23,8 +23,8 @@ import {
   Upload,
   Divider,
   Popconfirm,
-  Select,
   message,
+  TreeSelect,
 } from 'antd';
 import { PlusOutlined, UploadOutlined, EditOutlined, DeleteOutlined, MenuOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -36,8 +36,9 @@ import { CSS } from '@dnd-kit/utilities';
 import isString from 'lodash-es/isString';
 
 import type { UploadProps } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnsType } from 'antd/lib/table';
 import type { DragEndEvent } from '@dnd-kit/core';
+import type { BaseOptionType } from 'rc-tree-select/lib/TreeSelect';
 
 import {
   useCreateSiteMutation,
@@ -457,13 +458,19 @@ export default function Site(): ReactElement {
                 rules={[{ message: t('PLEASE_SELECT_CATEGORY'), required: true }]}
                 hasFeedback
               >
-                <Select placeholder={t('PLEASE_SELECT')}>
-                  {categories.map((category) => (
-                    <Select.Option key={category.id} value={category.id}>
-                      {category.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <TreeSelect
+                  showSearch
+                  style={{ width: '100%' }}
+                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  placeholder={t('PLEASE_SELECT')}
+                  treeDefaultExpandAll
+                  fieldNames={{
+                    children: 'children',
+                    label: 'name',
+                    value: 'id',
+                  }}
+                  treeData={categories as unknown as BaseOptionType[]}
+                />
               </Form.Item>
             </Col>
           </Row>

@@ -8,10 +8,10 @@ import type { ReactElement } from 'react';
 
 import { MainContent, Side } from 'layouts';
 import { Category, Logo, Nav, Search, Header } from 'components';
-import { useFetchCategoriesQuery, useFetchCategorySitesQuery } from 'hooks/request';
+import { useFetchCategoriesQuery } from 'hooks/request';
 import { useIsLogin } from 'hooks/store/user';
 
-import type { Category as CategoryType, CategorySites } from 'types/response';
+import type { Category as CategoryType } from 'types/response';
 import type { Theme } from 'types/theme';
 
 import logo from 'assets/images/logo.svg';
@@ -30,7 +30,7 @@ export default function Home(): ReactElement {
 
   const ref = useRef<HTMLElement | null>(null);
 
-  const { data: categorySites = [] } = useFetchCategorySitesQuery(categories, search);
+  // const { data: categorySites = [] } = useFetchCategorySitesQuery(categories, search);
 
   const isLogin = useIsLogin();
 
@@ -97,15 +97,13 @@ export default function Home(): ReactElement {
                 flex: 'auto',
                 marginTop: 10,
               }}
-              items={categorySites
-                .filter(({ sites }) => sites.length > 0)
-                .map(({ icon, id, name, description, children = [] }) => ({
-                  children,
-                  description,
-                  icon,
-                  id,
-                  name,
-                }))}
+              items={categories.map(({ icon, id, name, description, children = [] }) => ({
+                children,
+                description,
+                icon,
+                id,
+                name,
+              }))}
               getContainer={(): HTMLElement | Window => ref.current ?? window}
             />
             <div
@@ -180,22 +178,18 @@ export default function Home(): ReactElement {
                 flex: auto;
               `}
             >
-              {categorySites
-                .map(({ icon, name, sites }: CategorySites): ReactElement | undefined =>
-                  sites.length > 0 ? (
-                    <Category
-                      key={name}
-                      icon={icon}
-                      id={name}
-                      sites={sites}
-                      title={name}
-                      onClick={(id: number): void => {
-                        navigator.sendBeacon(`/api/site/${id}/visit`);
-                      }}
-                    />
-                  ) : undefined,
-                )
-                .filter(Boolean)}
+              {categories.map(
+                (category: Category): ReactElement => (
+                  <Category
+                    key={category.id}
+                    category={category}
+                    search={search}
+                    onClick={(id: number): void => {
+                      navigator.sendBeacon(`/api/site/${id}/visit`);
+                    }}
+                  />
+                ),
+              )}
             </div>
           </div>
         </MainContent>

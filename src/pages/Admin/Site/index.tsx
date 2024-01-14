@@ -78,7 +78,7 @@ export default function Site(): ReactElement {
 
   const [form] = Form.useForm();
 
-  const { data: categoryResponse } = useFetchCategoriesQuery({ page: 0, size: 10_000 });
+  const { data: categoryResponse } = useFetchCategoriesQuery({ page: 0, size: 10_000 }, undefined, true);
   const { data, isLoading, refetch } = useFetchSitesQuery(pagination, search);
   const { data: categorySites = [], refetch: refreshSites } = useFetchSitesByCategoryQuery(filter, search);
 

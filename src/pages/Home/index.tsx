@@ -139,7 +139,7 @@ export default function Home(): ReactElement {
               `}
             >
               <div>
-                ©2023{' '}
+                ©2023 {' - '} {new Date().getFullYear()}{' '}
                 <a target="_blank" href="https://github.com/huangcheng" rel="noreferrer">
                   HUANG Cheng
                 </a>{' '}

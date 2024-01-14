@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { css, useTheme, Global } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
 import { BrowserView } from 'react-device-detect';
@@ -6,6 +6,8 @@ import { GithubOutlined } from '@ant-design/icons';
 
 import type { ReactElement } from 'react';
 
+import { useDispatch } from 'hooks/store';
+import { setNav } from 'reducers/category';
 import { MainContent, Side } from 'layouts';
 import { Category, Logo, Nav, Search, Header } from 'components';
 import { useFetchCategoriesQuery } from 'hooks/request';
@@ -13,8 +15,10 @@ import { useIsLogin } from 'hooks/store/user';
 
 import type { Category as CategoryType } from 'types/response';
 import type { Theme } from 'types/theme';
+import type { Nav as CategoryNav } from 'reducers/category';
 
 import logo from 'assets/images/logo.svg';
+import { useNav } from 'hooks/store/category';
 
 export default function Home(): ReactElement {
   const theme = useTheme() as Theme;
@@ -30,7 +34,21 @@ export default function Home(): ReactElement {
 
   const ref = useRef<HTMLElement | null>(null);
 
-  // const { data: categorySites = [] } = useFetchCategorySitesQuery(categories, search);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      const result: CategoryNav = {};
+
+      for (const { id, children = [] } of categories) {
+        result[id] = children !== null && children.length > 0 ? children[0].id : id;
+      }
+
+      dispatch(setNav(result));
+    }
+  }, [categories, dispatch]);
+
+  const nav = useNav();
 
   const isLogin = useIsLogin();
 
@@ -105,6 +123,13 @@ export default function Home(): ReactElement {
                 name,
               }))}
               getContainer={(): HTMLElement | Window => ref.current ?? window}
+              onClick={(id) => {
+                if (/(\d+)-(\d+)/.test(id)) {
+                  const [parent, self] = id.split('-');
+
+                  dispatch(setNav({ ...nav, [parent]: Number(self) }));
+                }
+              }}
             />
             <div
               css={css`

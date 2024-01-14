@@ -1,11 +1,12 @@
 import { css, useTheme } from '@emotion/react';
-import { useState } from 'react';
 import { Segmented } from 'antd';
 
 import type { FC, ReactElement } from 'react';
 
 import { Site } from 'components';
+import { useDispatch, useNav } from 'hooks/store';
 import { useFetchSitesByCategoryQuery } from 'hooks/request';
+import { setNav } from 'reducers/category';
 
 import type { Theme } from 'types/theme';
 import type { Category, Site as SiteType } from 'types/response';
@@ -21,22 +22,21 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
 
   const { id, icon, name, children = [] } = category;
 
-  const [currentId] = useState(() => {
-    if (children !== null && children.length > 0) {
-      return children[0].id;
-    }
+  const nav = useNav();
 
-    return id;
-  });
+  const activatedId = nav[id];
 
-  const { data: sites = [] } = useFetchSitesByCategoryQuery(currentId, search);
+  const { data: sites = [] } = useFetchSitesByCategoryQuery(activatedId, search);
 
   const theme = useTheme() as Theme;
 
   const { textColor } = theme;
 
+  const dispatch = useDispatch();
+
   return (
     <section
+      id={`${id}`}
       css={css`
         margin-bottom: 48px;
       `}
@@ -63,6 +63,7 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
       {children !== null && children.length > 0 && (
         <section style={{ marginTop: 24 }}>
           <Segmented
+            value={activatedId}
             options={children.map(({ id, name, description, icon }) => ({
               icon: (
                 <img
@@ -83,9 +84,13 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
                   height={14}
                 />
               ),
-              label: name,
+              // eslint-disable-next-line unicorn/consistent-destructuring
+              label: <span id={`${category.id}-${id}`}>{name}</span>,
               value: id,
             }))}
+            onChange={(value): void => {
+              dispatch(setNav({ ...nav, [id]: value as number }));
+            }}
           />
         </section>
       )}

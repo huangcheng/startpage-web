@@ -4,6 +4,7 @@ export interface Category {
   icon: string;
   id: number;
   name: string;
+  parent_id?: number | null;
 }
 
 export interface Site {

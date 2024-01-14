@@ -1,7 +1,22 @@
 import { useEffect, useMemo, useState, Children, cloneElement } from 'react';
 import { useTheme } from '@emotion/react';
 import { motion } from 'framer-motion';
-import { Button, Flex, Input, Table, Drawer, Space, Form, Row, Col, Upload, Divider, Popconfirm, message } from 'antd';
+import {
+  Button,
+  Flex,
+  Input,
+  Table,
+  Drawer,
+  Space,
+  Form,
+  Row,
+  Col,
+  Upload,
+  Divider,
+  Popconfirm,
+  message,
+  TreeSelect,
+} from 'antd';
 import { PlusOutlined, UploadOutlined, EditOutlined, DeleteOutlined, MenuOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useCookie } from 'react-use';
@@ -26,6 +41,7 @@ import {
 import type { CreateCategory, UpdateCategory } from 'types/request';
 import type { Category } from 'types/response';
 import type { Theme } from 'types/theme';
+import type { BaseOptionType } from 'rc-tree-select/lib/TreeSelect';
 
 interface RowProps extends HTMLAttributes<HTMLTableRowElement> {
   'data-row-key': string;
@@ -55,6 +71,8 @@ export default function Category(): ReactElement {
   const sortCategoriesMutation = useSortCategoriesMutation();
 
   const { data, isLoading, refetch } = useFetchCategoriesQuery({ page: 0, size: 10_000 }, search);
+
+  const categories = useMemo(() => data?.data ?? [], [data]);
 
   useEffect(() => {
     if (
@@ -180,7 +198,7 @@ export default function Category(): ReactElement {
       },
       {
         key: 'operation',
-        render: ({ id, name, description, icon }: Category) => (
+        render: ({ id, name, description, icon, parent_id }: Category) => (
           <Flex gap={10} css={{ color: theme.navIconColor }}>
             <EditOutlined
               onClick={() => {
@@ -192,6 +210,7 @@ export default function Category(): ReactElement {
                   description,
                   icon,
                   name,
+                  parent_id,
                 });
 
                 setOpen(true);
@@ -289,7 +308,7 @@ export default function Category(): ReactElement {
         }}
       >
         <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
-          <SortableContext items={data?.data.map(({ id }) => id) ?? []} strategy={verticalListSortingStrategy}>
+          <SortableContext items={categories.map(({ id }) => id) ?? []} strategy={verticalListSortingStrategy}>
             <Table<Category>
               rowKey="id"
               columns={columns}
@@ -298,7 +317,7 @@ export default function Category(): ReactElement {
                   row: RowElement,
                 },
               }}
-              dataSource={data?.data ?? []}
+              dataSource={categories}
               loading={isLoading}
               pagination={false}
               expandable={{
@@ -327,22 +346,25 @@ export default function Category(): ReactElement {
               onClick={() => {
                 void form
                   .validateFields()
-                  .then((values: CreateCategory) => {
-                    const data: CreateCategory = { ...values };
+                  .then((values: CreateCategory | UpdateCategory) => {
+                    const data: CreateCategory | UpdateCategory = { ...values };
                     for (const key of Object.keys(values)) {
                       let value = values[key as keyof CreateCategory];
 
                       if (isString(value)) {
                         value = value.trim();
+                      } else if (value === undefined) {
+                        // eslint-disable-next-line unicorn/no-null
+                        value = null;
                       }
 
-                      data[key as keyof CreateCategory] = value;
+                      data[key as unknown as keyof (CreateCategory | UpdateCategory)] = value;
                     }
 
                     if (isUpdate) {
                       void updateCategoryMutation.mutate({ id, ...data } as UpdateCategory);
                     } else {
-                      createCategoryMutation.mutate(data);
+                      createCategoryMutation.mutate(data as CreateCategory);
                     }
                   })
                   .catch(() => {});
@@ -380,6 +402,42 @@ export default function Category(): ReactElement {
                 hasFeedback
               >
                 <Input placeholder={t('PLEASE_INPUT')} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={20}>
+            <Col span={24}>
+              <Form.Item
+                name="parent_id"
+                label={t('PARENT_CATEGORY')}
+                rules={[
+                  { required: false },
+                  {
+                    validator(_, value): Promise<void> {
+                      if (id === value) {
+                        return Promise.reject(new Error(t('CATEGORY_PARENT_ID_CONFLICT_WITH_ID')));
+                      }
+
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+                hasFeedback
+              >
+                <TreeSelect
+                  allowClear
+                  showSearch
+                  style={{ width: '100%' }}
+                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  placeholder={t('PLEASE_SELECT')}
+                  treeDefaultExpandAll
+                  fieldNames={{
+                    children: 'children',
+                    label: 'name',
+                    value: 'id',
+                  }}
+                  treeData={categories as unknown as BaseOptionType[]}
+                />
               </Form.Item>
             </Col>
           </Row>

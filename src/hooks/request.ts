@@ -42,14 +42,19 @@ import type {
 } from 'types/request';
 import { sortCategories, sortCategorySites } from 'apis/category';
 
-export function useFetchCategoriesQuery(pagination: Pagination, search?: string): UseQueryResult<CategoryResponse> {
+export function useFetchCategoriesQuery(
+  pagination: Pagination,
+  search?: string,
+  flat?: boolean,
+): UseQueryResult<CategoryResponse> {
   const page = pagination?.page ?? 0;
   const size = pagination?.size ?? 10;
+  const flatQuery = flat === true;
 
   return useQuery<CategoryResponse, Error>(
-    ['fetchCategory', page, size, search],
+    ['fetchCategories', page, size, search],
     async (): Promise<CategoryResponse> => {
-      const result$: Observable<CategoryResponse> = fetchCategories(page, size, search);
+      const result$: Observable<CategoryResponse> = fetchCategories(page, size, search, flatQuery);
 
       return await lastValueFrom<CategoryResponse>(result$);
     },

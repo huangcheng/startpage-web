@@ -52,7 +52,7 @@ export function useFetchCategoriesQuery(
   const flatQuery = flat === true;
 
   return useQuery<CategoryResponse, Error>(
-    ['fetchCategories', page, size, search],
+    ['fetchCategories', page, size, search, flat],
     async (): Promise<CategoryResponse> => {
       const result$: Observable<CategoryResponse> = fetchCategories(page, size, search, flatQuery);
 

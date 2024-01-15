@@ -79,6 +79,7 @@ export default function Site(): ReactElement {
   const [form] = Form.useForm();
 
   const { data: categoryResponse } = useFetchCategoriesQuery({ page: 0, size: 10_000 }, undefined, true);
+  const { data: categoryTreeResponse } = useFetchCategoriesQuery({ page: 0, size: 10_000 });
   const { data, isLoading, refetch } = useFetchSitesQuery(pagination, search);
   const { data: categorySites = [], refetch: refreshSites } = useFetchSitesByCategoryQuery(filter, search);
 
@@ -88,6 +89,8 @@ export default function Site(): ReactElement {
   const sortCategorySitesMutation = useSortCategorySitesMutation();
 
   const categories = useMemo(() => categoryResponse?.data ?? [], [categoryResponse?.data]);
+
+  const categoryTree = useMemo(() => categoryTreeResponse?.data ?? [], [categoryTreeResponse?.data]);
 
   const sites = useMemo(() => {
     if (filter) {
@@ -469,7 +472,7 @@ export default function Site(): ReactElement {
                     label: 'name',
                     value: 'id',
                   }}
-                  treeData={categories as unknown as BaseOptionType[]}
+                  treeData={categoryTree as unknown as BaseOptionType[]}
                 />
               </Form.Item>
             </Col>

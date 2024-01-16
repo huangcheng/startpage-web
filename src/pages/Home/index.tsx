@@ -9,7 +9,7 @@ import type { ReactElement } from 'react';
 import { useDispatch } from 'hooks/store';
 import { setNav } from 'reducers/category';
 import { MainContent, Side } from 'layouts';
-import { Category, Logo, Nav, Search, Header } from 'components';
+import { Logo, Search, Header } from 'components';
 import { useFetchCategoriesQuery } from 'hooks/request';
 import { useIsLogin } from 'hooks/store/user';
 
@@ -19,6 +19,8 @@ import type { Nav as CategoryNav } from 'reducers/category';
 
 import logo from 'assets/images/logo.svg';
 import { useNav } from 'hooks/store/category';
+
+import { Category, Nav } from './components';
 
 export default function Home(): ReactElement {
   const theme = useTheme() as Theme;

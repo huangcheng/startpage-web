@@ -6,7 +6,7 @@ import type { RootState, AppDispatch } from '../../store';
 
 export { useLocale, useSupportedLocales } from './global';
 
-export { useNav } from './category';
+export { useNav, useSites } from './category';
 
 export const useDispatch = (): AppDispatch => _useDispatch<AppDispatch>();
 export const useSelector: TypedUseSelectorHook<RootState> = _useSelector;

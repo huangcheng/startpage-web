@@ -358,6 +358,7 @@ export default function Category(): ReactElement {
                         value = null;
                       }
 
+                      // @ts-expect-error @ts-ignore
                       data[key as unknown as keyof (CreateCategory | UpdateCategory)] = value;
                     }
 

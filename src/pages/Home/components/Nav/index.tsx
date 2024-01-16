@@ -3,6 +3,8 @@ import { Anchor } from 'antd';
 import type { FC, ReactElement, CSSProperties } from 'react';
 import type { AnchorLinkItemProps } from 'antd/lib/anchor/Anchor';
 
+import { useSites } from 'hooks/store';
+
 import type { Category } from 'types/response';
 
 export interface NavProps {
@@ -27,12 +29,14 @@ const buildNavItems = (categories: Category[], parentId?: number): AnchorLinkIte
 const Nav: FC<NavProps> = (props: NavProps): ReactElement<NavProps> => {
   const { items, onClick, getContainer, ...rest } = props;
 
+  const sites = useSites();
+
   return (
     <div {...rest}>
       <Anchor
         affix={false}
         getContainer={getContainer}
-        items={buildNavItems(items)}
+        items={buildNavItems(items.filter(({ id }) => sites[id] > 0))}
         onClick={(_, link) => {
           onClick?.(link.href.replace('#', ''));
         }}

@@ -1,12 +1,13 @@
+import { useEffect } from 'react';
 import { css, useTheme } from '@emotion/react';
 import { Segmented } from 'antd';
 
 import type { FC, ReactElement } from 'react';
 
 import { Site } from 'components';
-import { useDispatch, useNav } from 'hooks/store';
+import { useDispatch, useNav, useSites } from 'hooks/store';
 import { useFetchSitesByCategoryQuery } from 'hooks/request';
-import { setNav } from 'reducers/category';
+import { setNav, setSites } from 'reducers/category';
 
 import type { Theme } from 'types/theme';
 import type { Category, Site as SiteType } from 'types/response';
@@ -17,12 +18,14 @@ export interface CategoryProps {
   search?: string;
 }
 
-const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<CategoryProps> => {
+const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<CategoryProps> | undefined => {
   const { category, search, onClick } = props;
 
   const { id, icon, name, children = [] } = category;
 
   const nav = useNav();
+
+  const categorySites = useSites();
 
   const activatedId = nav[id];
 
@@ -33,6 +36,16 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
   const { textColor } = theme;
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (categorySites[id] !== sites.length) {
+      dispatch(setSites({ ...categorySites, [id]: sites.length }));
+    }
+  }, [sites.length, categorySites, dispatch, id]);
+
+  if ((children === null || children.length === 0) && sites.length === 0) {
+    return undefined;
+  }
 
   return (
     <section

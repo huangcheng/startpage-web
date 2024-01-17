@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { css, useTheme } from '@emotion/react';
 import { Segmented } from 'antd';
 
 import type { FC, ReactElement } from 'react';
 
 import { Site } from 'components';
-import { useDispatch, useNav, useSites } from 'hooks/store';
-import { useFetchSitesByCategoryQuery } from 'hooks/request';
+import { useDispatch, useNav, useSites, useSiteAnalytics } from 'hooks/store';
+import { useFetchSitesByCategoryQuery, useFetchSitesByIdsQuery } from 'hooks/request';
 import { setNav, setSites } from 'reducers/category';
 
 import type { Theme } from 'types/theme';
@@ -29,7 +29,25 @@ const Category: FC<CategoryProps> = (props: CategoryProps): ReactElement<Categor
 
   const activatedId = nav[id];
 
-  const { data: sites = [] } = useFetchSitesByCategoryQuery(activatedId, search);
+  const { data = [] } = useFetchSitesByCategoryQuery(activatedId, search);
+
+  const siteAnalytics = useSiteAnalytics();
+
+  const topTenVisitedSitesIds = useMemo(() => {
+    const sites = Object.entries(siteAnalytics)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 10)
+      .map(([id]) => Number(id));
+
+    return sites;
+  }, [siteAnalytics]);
+
+  const frequentVisitedSites = useFetchSitesByIdsQuery(topTenVisitedSitesIds);
+
+  const sites = useMemo(
+    () => ((id as unknown as string) === 'hot' ? frequentVisitedSites.data : data) ?? [],
+    [id, data, frequentVisitedSites],
+  );
 
   const theme = useTheme() as Theme;
 

@@ -23,6 +23,7 @@ const en: Translations = {
   EMAIL: 'Email',
   EN_US: 'English',
   FILE_IS_TOO_LARGE: 'File Is Too Large',
+  FREQUENTLY_VISITED: 'Frequently Visited',
   ICON: 'Icon',
   INVALID_USERNAME_OR_PASSWORD: 'Invalid Username or Password',
   LOGIN: 'Login',

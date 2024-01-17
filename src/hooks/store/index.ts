@@ -8,5 +8,7 @@ export { useLocale, useSupportedLocales } from './global';
 
 export { useNav, useSites } from './category';
 
+export { useSiteAnalytics } from './site';
+
 export const useDispatch = (): AppDispatch => _useDispatch<AppDispatch>();
 export const useSelector: TypedUseSelectorHook<RootState> = _useSelector;

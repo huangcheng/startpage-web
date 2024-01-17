@@ -27,6 +27,7 @@ import {
   deleteSite,
   updateSite,
   fetchSites,
+  fetchSite,
 } from 'apis';
 
 import type { Category, Site, CategorySites, UserInfo, CategoryResponse, SiteResponse } from 'types/response';
@@ -300,6 +301,16 @@ export function useFetchSitesQuery(pagination: Pagination, search?: string): Use
     const result$: Observable<SiteResponse> = fetchSites(page, size, search);
 
     return await lastValueFrom<SiteResponse>(result$);
+  });
+}
+
+export function useFetchSitesByIdsQuery(ids: number[]): UseQueryResult<Site[]> {
+  return useQuery<Site[], Error>(['fetchSitesByIds', ids], async (): Promise<Site[]> => {
+    const result$: Observable<Site[]> = forkJoin(ids.map((id) => fetchSite(id))).pipe(
+      map<Site[], Site[]>((sites) => sites.filter((site) => site !== null)),
+    );
+
+    return await lastValueFrom<Site[]>(result$);
   });
 }
 

@@ -23,6 +23,7 @@ const cn: Translations = {
   EMAIL: '邮箱',
   EN_US: '英文',
   FILE_IS_TOO_LARGE: '文件过大',
+  FREQUENTLY_VISITED: '常用',
   ICON: '图标',
   INVALID_USERNAME_OR_PASSWORD: '用户名或密码无效',
   LOGIN: '登录',

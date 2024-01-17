@@ -1,5 +1,6 @@
 import { from } from 'rxjs';
 import omit from 'lodash-es/omit';
+import isNumber from 'lodash-es/isNumber';
 
 import type { Observable } from 'rxjs';
 
@@ -9,6 +10,10 @@ import type { Site, SiteResponse } from 'types/response';
 import type { CreateSite, UpdateSite } from 'types/request';
 
 export const fetchSitesByCategory = (id: number, search?: string): Observable<Site[]> => {
+  if (!isNumber(id)) {
+    return from<Promise<Site[]>>(Promise.resolve([]));
+  }
+
   let query = `/category/${id}/sites`;
 
   if (search) {
@@ -17,6 +22,8 @@ export const fetchSitesByCategory = (id: number, search?: string): Observable<Si
 
   return from<Promise<Site[]>>(request.get(query));
 };
+
+export const fetchSite = (id: number): Observable<Site> => from<Promise<Site>>(request.get(`/site/${id}`));
 
 export const fetchSites = (page: number, size: number, search?: string): Observable<SiteResponse> => {
   let query: string = `page=${page}&size=${size}`;

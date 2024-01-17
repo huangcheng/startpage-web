@@ -6,19 +6,21 @@ import { GithubOutlined } from '@ant-design/icons';
 
 import type { ReactElement } from 'react';
 
-import { useDispatch } from 'hooks/store';
+import { useDispatch, useSiteAnalytics } from 'hooks/store';
 import { setNav } from 'reducers/category';
+import { setSiteAnalytics } from 'reducers/site';
 import { MainContent, Side } from 'layouts';
 import { Logo, Search, Header } from 'components';
 import { useFetchCategoriesQuery } from 'hooks/request';
 import { useIsLogin } from 'hooks/store/user';
+import { useNav } from 'hooks/store/category';
 
 import type { Category as CategoryType } from 'types/response';
 import type { Theme } from 'types/theme';
 import type { Nav as CategoryNav } from 'reducers/category';
 
 import logo from 'assets/images/logo.svg';
-import { useNav } from 'hooks/store/category';
+import hot from 'assets/icons/hot.svg';
 
 import { Category, Nav } from './components';
 
@@ -30,13 +32,27 @@ export default function Home(): ReactElement {
 
   const { data } = useFetchCategoriesQuery({ page: 0, size: 10_000 });
 
-  const categories = useMemo<CategoryType[]>(() => data?.data ?? [], [data]);
+  const categories = useMemo<CategoryType[]>(() => {
+    const categories = data?.data ?? [];
+
+    const hotCategory = {
+      children: [],
+      description: t('FREQUENTLY_VISITED'),
+      icon: hot,
+      id: 'hot' as unknown as number,
+      name: t('FREQUENTLY_VISITED'),
+    };
+
+    return [hotCategory, ...categories];
+  }, [data, t]);
 
   const [search, setSearch] = useState('');
 
   const ref = useRef<HTMLElement | null>(null);
 
   const dispatch = useDispatch();
+
+  const siteAnalytics = useSiteAnalytics();
 
   useEffect(() => {
     if (categories.length > 0) {
@@ -213,6 +229,8 @@ export default function Home(): ReactElement {
                     search={search}
                     onClick={(id: number): void => {
                       navigator.sendBeacon(`/api/site/${id}/visit`);
+
+                      dispatch(setSiteAnalytics({ ...siteAnalytics, [id]: (siteAnalytics[id] ?? 0) + 1 }));
                     }}
                   />
                 ),

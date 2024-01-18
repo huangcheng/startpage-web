@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, Input, Upload, Space, Button, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useCookie } from 'react-use';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import omit from 'lodash-es/omit';
 import isString from 'lodash-es/isString';
 

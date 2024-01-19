@@ -64,7 +64,11 @@ const Site: FC<SiteProps> = (props: SiteProps): ReactElement<SiteProps> => {
             color: ${textColor};
             margin: 6px 0 0 0;
             width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           `}
+          title={title}
         >
           {title}
         </h3>
